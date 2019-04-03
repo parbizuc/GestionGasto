@@ -1,0 +1,34 @@
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="250dp"
+    android:layout_height="250dp"
+    android:layout_margin="20dp"
+    card_view:cardCornerRadius="4dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/cardLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grisApp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgCard_iv"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+
+        <TextView
+            android:id="@+id/textCard_tv"
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:gravity="center"
+            android:background="@android:color/white"
+            android:text="Gestión de Solicitudes"
+            android:textColor="@color/textoMenu"
+            android:textSize="20sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
