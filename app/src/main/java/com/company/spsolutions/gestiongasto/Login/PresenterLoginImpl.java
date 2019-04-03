@@ -17,14 +17,29 @@ public class PresenterLoginImpl{
 
     }
 
+    /*
+    * Verifica si existe una sesión activa
+     * 1. Manda a la clase LoginFirebase las contraseñas necesarias (si son validas) para inicias sesión
+     * 2. Manda a la clase LoginFirebase para manejar el signout
+     */
     public void onLogin (){}
 
-    public boolean validate(){
+    /* Método validate
+    * 1. Verificar la estructura del usuario y checar que es valido (email correcto)
+    * 2. Comprobar que la contraseña tenga la estructura necesaria
+     */
+    public boolean validate(String user, String password){
         return  true;
     }
 
+    /* Método onSuccess
+     * 1. Si el login fue exitoso se le notifica a la vista que mande a cargar y a la siguiente activity
+     */
     public void onSuccess() { }
 
+    /* Método onError
+     * 1. Si el login fallo se le notifica a la vista que mande el error correspondiente
+     */
     public void onError() { }
 
 
