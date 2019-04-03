@@ -4,6 +4,7 @@ package com.company.spsolutions.gestiongasto.MenuPrincipal;
  */
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,20 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
         this.contexto = contexto;
     }
 
+    /*
+     * 1. Implementar los listeners para cada card
+     */
     @Override
-    public void onBindViewHolder(CardHolder cardHolder, int i) {
+    public void onBindViewHolder(final CardHolder cardHolder, final int i) {
         ItemMenu itemMenu = itemsMenu.get(i);
         Picasso.get().load(itemMenu.image).into(cardHolder.imageIV);
         cardHolder.titleTV.setText(itemMenu.title);
+        cardHolder.cardViewCV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(contexto,"mensaje" + i,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -38,18 +48,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
         return itemsMenu.size();
     }
 
-    /*
-    * 1. Implementar los listeners para cada card
-     */
     @Override
     public CardHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         final View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(contexto,"este es mensaje",Toast.LENGTH_LONG);
-            }
-        });
         return new CardHolder(itemView);
     }
 
@@ -57,11 +58,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
     public static class CardHolder extends RecyclerView.ViewHolder {
         public TextView titleTV;
         public ImageView imageIV;
+        public CardView cardViewCV;
 
         public CardHolder(View card) {
             super(card);
             titleTV = card.findViewById(R.id.textCard_tv);
             imageIV = card.findViewById(R.id.imgCard_iv);
+            cardViewCV = card.findViewById(R.id.card_view);
         }
     }
 
