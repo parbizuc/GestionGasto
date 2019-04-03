@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
     private MainAdapter mAdapter;
     private LinearLayoutManager layoutManager;
 
+    /*
+    * 1. Crear el menú y el buscador
+    * 2. Cambiar los datos de la app bar (toolbar)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +42,14 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerMenu.setLayoutManager(layoutManager);
-        mAdapter = new MainAdapter(getData());
+        mAdapter = new MainAdapter(getData(), getApplicationContext());
         recyclerMenu.setAdapter(mAdapter);
     }
 
-    public void setListeners(){}
+    /*
+    * Implementar la logica para realizar la busqueda
+     */
+    public void search(){}
 
     public List<ItemMenu> getData(){
         List<ItemMenu> items= new ArrayList <ItemMenu>();
