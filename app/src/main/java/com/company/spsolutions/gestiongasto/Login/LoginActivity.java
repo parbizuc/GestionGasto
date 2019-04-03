@@ -19,23 +19,24 @@ public class LoginActivity extends AppCompatActivity  implements PresenterLogin 
 * displayLoader implementa el método de la interfaz para mostrar un  loader mientras se espera la respuesta de firebase
 * successLogin implementa el método de la interfaz para mostrar la siguiente interacción si el login es exitoso
  */
+
+    /* En el método onCreate
+     *1. Crear una variable del contexto y de la interfaz PresenterLogin (delegado)
+     *2. Crear una instancia del presentador (clase PresenterLoginImpl)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("xRendir");
-        setSupportActionBar(toolbar);
-
+        initComponents();
     }
 
 
     /*
     Acciones del boton :
-    1. inicializar componentes de cajas de texto usuario, password y boton de ingresar
+    1. inicializar componentes de cajas de texto usuario, contraseña y boton de ingresar
     2. Implementar logica del metodo setlistener del boton ingresar
     */
-
     public void initComponents(){
 
     }

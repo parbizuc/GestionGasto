@@ -12,5 +12,16 @@ public class LoginFirebase {
 
     public LoginFirebase (PresenterLoginImpl presenter){}
 
-    public void signin(){}
+    /*
+    * El siguiente método se encargara de hacer toda la lógica
+    * para acceder a firebase y comprobar que el inicio de sesión con las credenciales enviadas son válidas
+     */
+    public void signin(String user, String password){}
+
+    /*
+     * El siguiente método se encargara de hacer toda la lógica
+     * para acceder a firebase y terminar con la sesión
+     */
+    public void signout(){}
+
 }
