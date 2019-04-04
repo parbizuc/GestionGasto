@@ -19,9 +19,31 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addsolicitud);
     }
+    /*
+    * Crear instancia de los elementos
+     */
     public void initComponents(){}
+
+    /*
+    * 1. Colocar los listeners a los botones de grabar y registrar
+    * 2. Colocar los listeners al datepicker
+     */
+    public void setlisteners(){}
+
+    /*
+    * 1. Crear la logica para guardar una solicitud
+     */
     public void guardarSolicitud(){}
+
+    /*
+    * Crear logica para mandar a revisar la solicirtud
+     */
     public void mandarRevision(){}
+
+    /*
+    * Lanzar pop up
+     */
+    public void popUp(){}
 
     @Override
     public void displayError(String error) {

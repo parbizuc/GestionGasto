@@ -5,4 +5,13 @@ package com.company.spsolutions.gestiongasto.Informes;
  */
 public class PresenterInformeImpl {
 
+    /*
+    * Lógica para agregar un informe y mandar a guardarlo en firebase utulizando informeService
+     */
+public void addInforme(){}
+
+/*
+* Obtener los informes de firebase
+ */
+public void getInformes(){}
 }

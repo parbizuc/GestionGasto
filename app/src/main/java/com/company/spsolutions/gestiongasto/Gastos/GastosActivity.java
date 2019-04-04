@@ -3,17 +3,19 @@ package com.company.spsolutions.gestiongasto.Gastos;
  * Created by coralRodriguez on 28/03/19.
  */
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.company.spsolutions.gestiongasto.R;
-import com.company.spsolutions.gestiongasto.SolicitudGasto.SolicitudActivity;
+import com.company.spsolutions.gestiongasto.SolicitudGasto.FragmentSolicitudes;
 
 public class GastosActivity extends AppCompatActivity implements PresenterGastos {
     /*
@@ -21,55 +23,61 @@ public class GastosActivity extends AppCompatActivity implements PresenterGastos
      * displayError se encarga de colocar error en caso que exista
      */
 
+    private FragmentGastos.SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gastos);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addGastos_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Mandar a agregar un gasto", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        Toolbar toolbar = findViewById(R.id.toolbarGastos);
+        setSupportActionBar(toolbar);
+        mSectionsPagerAdapter = new FragmentGastos.SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
     }
+
+
+    /*
+     * Método usado para agregar gasto al presionar el boton flotante
+     * 1. Agregar intent
+     */
+    public void agregarGasto() {
+
+    }
+
+    /*
+     * Crear las opciones del menú
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    /*
+     * Crear las acciones de las opciones del menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void displayError() {
 
     }
 
-
-    public static class PlaceholderFragment extends Fragment {
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        public static SolicitudActivity.PlaceholderFragment newInstance(int sectionNumber) {
-            SolicitudActivity.PlaceholderFragment fragment = new SolicitudActivity.PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_solicitud, container, false);
-            return rootView;
-        }
-    }
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return SolicitudActivity.PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // 2.
-            return 2;
-        }
-    }
 }

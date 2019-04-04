@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public void search(){}
 
+    /*
+     *  Modificar segun el perfil del usuario
+     */
     public List<ItemMenu> getData(){
         List<ItemMenu> items= new ArrayList <ItemMenu>();
         items.add(new ItemMenu("Gestión de solicitudes","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlv7N1qgf_Al1YinpbuSLGwciK_e2r3EK3Ewjx78s8zBl88YPl"));

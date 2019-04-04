@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.company.spsolutions.gestiongasto">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,24 +12,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SolicitudGasto.SolicitudActivity"
+            android:name=".Informes.LiquidarActivity"
+            android:label="@string/title_activity_liquidar"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".MenuPrincipal.MainActivity">
+        <activity android:name=".SolicitudGasto.EvaluarSolicitud" />
+        <activity
+            android:name=".SolicitudGasto.SolicitudActivity"
+            android:label="Gestión de Solicitudes"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Gastos.AddGastoActivity" />
+        <activity
+            android:name=".Gastos.GastosActivity"
+            android:label="Gestión de Gastos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Informes.InformeActivity"
+            android:label="Informe de Gastos"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MenuPrincipal.MainActivity" />
         <activity android:name=".Login.LoginActivity" />
-        <activity android:name=".SolicitudGasto.AddSolicitudActivity" />
-        <activity android:name=".Gastos.AddGastoActivity" />
-        <activity android:name=".Gastos.GastosActivity" />
         <activity android:name=".Informes.ResumenGastosActivity" />
-        <activity android:name=".Informes.BalanceGastosActivity" />
         <activity android:name=".Informes.AprobarGastoActivity" />
         <activity android:name=".Informes.AddInformeActivity" />
-        <activity android:name=".Informes.InformeActivity" />
     </application>
 
 </manifest>

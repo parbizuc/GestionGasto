@@ -22,11 +22,30 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addgasto);
     }
-
+    /*
+    * Crear instancia  de los checkbox,edittext,textview,etc
+     */
     public void initComponents(){}
+
+    /*
+    * Agregar los listeners a los componentes
+     */
+
     public void setListeners(){}
+    /*
+    * Agregar la logica para cargar la imagen e interactuar con ella (zoom)
+     */
     public void loadImage(){}
+
+    /*
+    * Implementar la logica para el boton de guardar
+    * Este boton debe mandar al presentador el nuevo gasto y notificar a la vista
+     */
     public void sendData(){}
+
+    /*
+    *Realizar la lógica que requiera el checkbox para gastos recurrentes
+     */
     public void comboRecurrente(){}
 
     @Override
