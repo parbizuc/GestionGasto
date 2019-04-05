@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "902980451508",
+    "firebase_url": "https://gestiongasto-f83db.firebaseio.com",
+    "project_id": "gestiongasto-f83db",
+    "storage_bucket": "gestiongasto-f83db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902980451508:android:83a1f78e78f040c7",
+        "android_client_info": {
+          "package_name": "com.company.spsolutions.gestiongasto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL8jN7aKSykxzbWWls10io6PonB2c3HxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "902980451508-hp758f9h2na2tqe8ukctvn4dprmo3nii.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902980451508:android:adf77dd11a8bf10f",
+        "android_client_info": {
+          "package_name": "com.company.spsolutions.gestosdecompras"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL8jN7aKSykxzbWWls10io6PonB2c3HxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "902980451508-hp758f9h2na2tqe8ukctvn4dprmo3nii.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
