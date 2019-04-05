@@ -1,6 +1,8 @@
 package com.company.spsolutions.gestiongasto.SolicitudGasto;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -17,10 +24,10 @@ import java.util.List;
  * Created by coralRodriguez on 01/04/2019
  */
 public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.CardHolder> {
-    List<ItemSolicitud> itemsSolicitud;
+    List<Solicitud> itemsSolicitud;
     Context contexto;
 
-    public SolicitudAdapter(List<ItemSolicitud> itemsSolicitud, Context contexto) {
+    public SolicitudAdapter(List<Solicitud> itemsSolicitud, Context contexto) {
         this.itemsSolicitud = itemsSolicitud;
         this.contexto = contexto;
     }
@@ -31,15 +38,15 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
      */
     @Override
     public void onBindViewHolder(final CardHolder registroHolder, final int i) {
-        ItemSolicitud itemSolicitud = itemsSolicitud.get(i);
-        registroHolder.nombreTV.setText(itemSolicitud.nombre);
-        registroHolder.puestoTV.setText(itemSolicitud.puesto);
-        registroHolder.fechaTV.setText(itemSolicitud.fecha);
-        registroHolder.dineroTV.setText(itemSolicitud.dineroSolicitado);
-        if ((itemSolicitud.estatus == null)) {
+        Solicitud itemSolicitud = itemsSolicitud.get(i);
+        registroHolder.nombreTV.setText(itemSolicitud.getNombre());
+        registroHolder.puestoTV.setText(itemSolicitud.getPuesto());
+        registroHolder.fechaTV.setText(itemSolicitud.getFecha());
+        registroHolder.dineroTV.setText(itemSolicitud.getDineroSolicitado());
+        if ((itemSolicitud.getEstatus() == null)) {
             registroHolder.labelSolicitudTV.setVisibility(View.GONE);
         } else {
-            registroHolder.labelSolicitudTV.setText(itemSolicitud.estatus);
+            registroHolder.labelSolicitudTV.setText(itemSolicitud.getEstatus());
         }
         registroHolder.registroCV.setOnClickListener(new View.OnClickListener() {
             @Override

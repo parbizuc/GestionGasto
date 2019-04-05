@@ -10,7 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +23,13 @@ import java.util.List;
 /**
  * Created by coralRodriguez on 01/04/2019
  */
-public class FragmentSolicitudes extends Fragment {
+public class FragmentSolicitudes extends Fragment implements PresenterSolicitud {
     private RecyclerView recyclerSolicitud;
     private SolicitudAdapter sAdapter;
     private LinearLayoutManager layoutManager;
     private static String SECTION_NUMBER;
+    PresenterSolicitudImpl presenter;
+    List<Solicitud> datos = new ArrayList<>();
 
     public static FragmentSolicitudes newInstance(int sectionNumber) {
         FragmentSolicitudes fragment = new FragmentSolicitudes();
@@ -35,41 +42,47 @@ public class FragmentSolicitudes extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        List<ItemSolicitud> datos;
+        presenter = new PresenterSolicitudImpl(getContext(), this);
+        DatabaseReference dbSolicitud = presenter.connect();
         View rootView = inflater.inflate(R.layout.fg_solicitudes, container, false);
         recyclerSolicitud = rootView.findViewById(R.id.recycler_solicitudes);
         recyclerSolicitud.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerSolicitud.setLayoutManager(layoutManager);
-        datos = getArguments().getInt(SECTION_NUMBER) == 1 ? getDataRegistradas() : getDataProcesadas();
-        sAdapter = new SolicitudAdapter(datos, rootView.getContext());
-        recyclerSolicitud.setAdapter(sAdapter);
+        dbSolicitud.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Solicitud solicitud = dataSnapshot.getValue(Solicitud.class);
+                    datos.add(solicitud);
+                }
+                datos = getArguments().getInt(SECTION_NUMBER) == 1 ? presenter.getDataRegistradas(datos) : presenter.getDataProcesadas(datos);
+                sAdapter = new SolicitudAdapter(datos, getContext());
+                recyclerSolicitud.setAdapter(sAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         return rootView;
     }
 
-    public List<ItemSolicitud> getDataRegistradas() {
-        List<ItemSolicitud> solicitudes = new ArrayList<ItemSolicitud>();
-        solicitudes.add(new ItemSolicitud("Juan Perez", "ventas", "29/10/19", "$12,000"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "diseño", "29/01/18", "$2,000"));
-        return solicitudes;
+    @Override
+    public void displayError(String error) {
+
     }
 
-    public List<ItemSolicitud> getDataProcesadas() {
-        List<ItemSolicitud> solicitudes = new ArrayList<ItemSolicitud>();
-        solicitudes.add(new ItemSolicitud("Juan Perez", "ventas", "29/10/19", "$12,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "diseño", "29/01/18", "$2,000", "Rechazada"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "diseño", "29/01/18", "$28,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose ", "diseño", "29/01/18", "$52,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "diseño", "29/01/18", "$62,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "d", "29/01/18", "$2,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Juan Perez", "ventas", "29/10/19", "$12,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "diseño", "29/01/18", "$2,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "diseño", "29/01/18", "$28,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose ", "diseño", "29/01/18", "$52,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "diseño", "29/01/18", "$62,000", "Procesada"));
-        solicitudes.add(new ItemSolicitud("Jose Perez", "d", "29/01/18", "$2,000", "Procesada"));
-        return solicitudes;
+    @Override
+    public void displayLoader(boolean loader) {
+
+    }
+
+    @Override
+    public void displayLabel() {
+
     }
 
     public static class SectionsPagerAdapter extends FragmentPagerAdapter {
