@@ -9,6 +9,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,34 +37,9 @@ public class PresenterSolicitudImpl {
     /*
      * Conectar a la base de datos para obtener los registros
      */
-    public DatabaseReference connect() {
+    public CollectionReference connect() {
         service = new SolicitudService();
         return service.connect();
-    }
-    /*
-    * Separa la lógica de la vista para obtener los registros de solicitudes registradas
-     */
-    public List<Solicitud> getDataRegistradas(List<Solicitud> solicitudes) {
-        List<Solicitud> registradas = new ArrayList<>();
-        for (Solicitud solicitud : solicitudes) {
-            if (solicitud.getEstatus() == null) {
-                registradas.add(solicitud);
-            }
-        }
-        return registradas;
-    }
-
-    /*
-     * Separa la lógica de la vista para obtener los registros de solicitudes ya procesadas
-     */
-    public List<Solicitud> getDataProcesadas(List<Solicitud> solicitudes) {
-        List<Solicitud> procesadas = new ArrayList<>();
-        for (Solicitud solicitud : solicitudes) {
-            if (solicitud.getEstatus() != null) {
-                procesadas.add(solicitud);
-            }
-        }
-        return procesadas;
     }
 
     /*

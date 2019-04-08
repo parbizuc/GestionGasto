@@ -20,13 +20,13 @@
             android:name=".SolicitudGasto.SolicitudActivity"
             android:label="Gestión de Solicitudes"
             android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".Gastos.AddGastoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Gastos.AddGastoActivity">
         </activity>
         <activity
             android:name=".Gastos.GastosActivity"

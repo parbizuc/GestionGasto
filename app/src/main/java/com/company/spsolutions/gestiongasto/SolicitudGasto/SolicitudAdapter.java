@@ -39,14 +39,14 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
     @Override
     public void onBindViewHolder(final CardHolder registroHolder, final int i) {
         Solicitud itemSolicitud = itemsSolicitud.get(i);
-        registroHolder.nombreTV.setText(itemSolicitud.getNombre());
-        registroHolder.puestoTV.setText(itemSolicitud.getPuesto());
-        registroHolder.fechaTV.setText(itemSolicitud.getFecha());
-        registroHolder.dineroTV.setText(itemSolicitud.getDineroSolicitado());
-        if ((itemSolicitud.getEstatus() == null)) {
+        registroHolder.nombreTV.setText(itemSolicitud.getNombreUsuario());
+        registroHolder.descripcionTV.setText(itemSolicitud.getDescripción());
+        registroHolder.fechaTV.setText(itemSolicitud.getFechaInicio());
+        registroHolder.dineroTV.setText(itemSolicitud.getImporte());
+        if ((itemSolicitud.getEstado() == null)) {
             registroHolder.labelSolicitudTV.setVisibility(View.GONE);
         } else {
-            registroHolder.labelSolicitudTV.setText(itemSolicitud.getEstatus());
+            registroHolder.labelSolicitudTV.setText(itemSolicitud.getEstado());
         }
         registroHolder.registroCV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +70,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
 
     public static class CardHolder extends RecyclerView.ViewHolder {
         public TextView nombreTV;
-        public TextView puestoTV;
+        public TextView descripcionTV;
         public TextView fechaTV;
         public TextView dineroTV;
         public TextView labelSolicitudTV;
@@ -79,13 +79,20 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
         public CardHolder(View card) {
             super(card);
             nombreTV = card.findViewById(R.id.nombre_tv);
-            puestoTV = card.findViewById(R.id.puesto_tv);
+            descripcionTV = card.findViewById(R.id.descripcion_tv);
             fechaTV = card.findViewById(R.id.fecha_tv);
             dineroTV = card.findViewById(R.id.dinero_tv);
             labelSolicitudTV = card.findViewById(R.id.labelSolicitud_tv);
             registroCV = card.findViewById(R.id.solicitudCV);
         }
     }
+
+    public void refreshSolicitudes(List<Solicitud> solicitudes) {
+        this.itemsSolicitud.clear();
+        this.itemsSolicitud.addAll(solicitudes);
+        notifyDataSetChanged();
+    }
+
 
     /*
      * 1. Mandar a la pantalla para editar una solicitud (crear intent)
