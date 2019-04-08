@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">GestionGasto </string>
-    <string name="title_activity_liquidar">LiquidarActivity</string>
+    <string-array name="monedas_array">
+        <item>MX</item>
+        <item>US</item>
+    </string-array>
 </resources>
