@@ -37,19 +37,6 @@ public class Solicitud {
         this.idUsuario = idUsuario;
     }
 
-    public Solicitud(String fechaInicio, String fechaFin, String descripción, String centro, String moneda, String importe, String fechaRegistro, String motivoRechazo, String nombreUsuario, String idUsuario) {
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.descripción = descripción;
-        this.centro = centro;
-        this.moneda = moneda;
-        this.importe = importe;
-        this.fechaRegistro = fechaRegistro;
-        this.motivoRechazo = motivoRechazo;
-        this.nombreUsuario = nombreUsuario;
-        this.idUsuario = idUsuario;
-    }
-
     public String getFechaInicio() {
         return fechaInicio;
     }

@@ -20,11 +20,6 @@
             android:name=".SolicitudGasto.SolicitudActivity"
             android:label="Gestión de Solicitudes"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Gastos.AddGastoActivity">
         </activity>
@@ -39,7 +34,13 @@
 
         </activity>
         <activity android:name=".MenuPrincipal.MainActivity" />
-        <activity android:name=".Login.LoginActivity" />
+        <activity android:name=".Login.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Informes.ResumenGastosActivity" />
         <activity android:name=".Informes.AprobarGastoActivity" />
         <activity android:name=".Informes.AddInformeActivity" />
