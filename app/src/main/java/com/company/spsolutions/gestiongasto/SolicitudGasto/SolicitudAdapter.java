@@ -40,9 +40,9 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
     public void onBindViewHolder(final CardHolder registroHolder, final int i) {
         Solicitud itemSolicitud = itemsSolicitud.get(i);
         registroHolder.nombreTV.setText(itemSolicitud.getNombreUsuario());
-        registroHolder.descripcionTV.setText(itemSolicitud.getDescripción());
+        registroHolder.descripcionTV.setText(itemSolicitud.getDescripcion());
         registroHolder.fechaTV.setText(itemSolicitud.getFechaInicio());
-        registroHolder.dineroTV.setText(itemSolicitud.getImporte());
+        registroHolder.dineroTV.setText("$" + itemSolicitud.getImporte());
         if ((itemSolicitud.getEstado() == null)) {
             registroHolder.labelSolicitudTV.setVisibility(View.GONE);
         } else {

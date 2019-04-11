@@ -23,7 +23,6 @@ import java.util.List;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
     List<ItemMenu> itemsMenu;
     Context contexto;
-    Integer posicion;
 
     public MainAdapter(List<ItemMenu> itemsMenu, Context contexto) {
         this.itemsMenu = itemsMenu;
@@ -34,29 +33,27 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
      * 1. Implementar los listeners para cada card
      */
     @Override
-    public void onBindViewHolder(final CardHolder cardHolder, int i) {
+    public void onBindViewHolder(final CardHolder cardHolder, final int i) {
         ItemMenu itemMenu = itemsMenu.get(i);
-        posicion = i;
         Picasso.get().load(itemMenu.image).into(cardHolder.imageIV);
         cardHolder.titleTV.setText(itemMenu.title);
-        cardHolder.cardViewCV.setOnClickListener(onclick);
+        cardHolder.cardViewCV.setOnClickListener(new View.OnClickListener() {
+            /*Fata controlar el listener segun el rol*/
+            @Override
+            public void onClick(View v) {
+                switch (i) {
+                    case 0:
+                        Intent sActivity = new Intent(contexto, SolicitudActivity.class);
+                        contexto.startActivity(sActivity);
+                        break;
+                    default:
+                        Toast.makeText(contexto, "mensaje" + i, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
 
-    /*Fata controlar el listener segun el rol*/
-    View.OnClickListener onclick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (posicion) {
-                case 0:
-                    Intent sActivity = new Intent(contexto, SolicitudActivity.class);
-                    contexto.startActivity(sActivity);
-                    break;
-                default:
-                    Toast.makeText(contexto, "mensaje" + v.getId(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-    };
 
     @Override
     public int getItemCount() {

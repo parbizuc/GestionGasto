@@ -68,7 +68,12 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
     }
 
     @Override
-    public void displayLabel() {
+    public void displayLabel(String text) {
+
+    }
+
+    @Override
+    public void changeActivity() {
 
     }
 
@@ -77,9 +82,8 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
      * 1. Agregar intent
      */
     public void agregarSolicitud() {
-        Intent nsolicitud = new Intent(this, AddSolicitudActivity.class);
+        Intent nsolicitud = new Intent(SolicitudActivity.this, AddSolicitudActivity.class);
         startActivity(nsolicitud);
-
     }
 
     /*

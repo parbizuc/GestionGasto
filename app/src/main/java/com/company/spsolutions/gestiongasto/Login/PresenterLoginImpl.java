@@ -3,8 +3,8 @@ package com.company.spsolutions.gestiongasto.Login;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.util.Patterns;
 
+import com.company.spsolutions.gestiongasto.Modelos.Empresa;
 import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -15,8 +15,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by coralRodriguez on 27/03/19.
@@ -71,7 +69,24 @@ public class PresenterLoginImpl {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Map datos = document.getData();
                         Usuario.init(datos.get("rol").toString(), datos.get("id").toString(), datos.get("nombre").toString(), datos.get("idEmpresa").toString(), datos.get("nombreEmpresa").toString(), datos.get("pais").toString());
+                        getEmpresa(datos.get("idEmpresa").toString());
                         delegate.successLogin();
+                    }
+                } else {
+                    Log.d("ERROR", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void getEmpresa(String id) {
+        service.getDbEmpresa().whereEqualTo("id", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map datos = document.getData();
+                        Empresa.init(datos.get("id").toString(), datos.get("nombre").toString(), datos.get("moneda").toString(), datos.get("prefijoPais").toString());
                     }
                 } else {
                     Log.d("ERROR", "Error getting documents: ", task.getException());

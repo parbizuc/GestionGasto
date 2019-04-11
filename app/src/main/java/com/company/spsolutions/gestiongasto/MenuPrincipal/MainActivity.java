@@ -59,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public List<ItemMenu> getData() {
         List<ItemMenu> items = new ArrayList<ItemMenu>();
         items.add(new ItemMenu("Gestión de solicitudes", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlv7N1qgf_Al1YinpbuSLGwciK_e2r3EK3Ewjx78s8zBl88YPl"));
-        if (!Usuario.getInstance().getRol().equals("usuario")) {
-            items.add(new ItemMenu(Usuario.getInstance().getRol(), "https://cooperandoando.com/media/2017/12/19-Gastos.png"));
-        }
+        items.add(new ItemMenu("Gestión de gastos", "https://cooperandoando.com/media/2017/12/19-Gastos.png"));
         items.add(new ItemMenu("Informe de gastos", "https://cooperandoando.com/media/2017/12/19-Gastos.png"));
         return items;
     }

@@ -7,34 +7,40 @@ package com.company.spsolutions.gestiongasto.Modelos;
 public class Solicitud {
     String fechaInicio;
     String fechaFin;
-    String descripción;
+    String descripcion;
     String centro;
     String moneda;
-    String importe;
+    String importe; //montoSolicitado
     String fechaRegistro;
+    String fechaEnviado;
     String estado;
     String motivoRechazo;
     String nombreUsuario;
     String idUsuario;
     String id;
+    String idEmpresa;
+    String pais;
 
     public Solicitud() {
 
     }
 
-    public Solicitud(String id, String fechaInicio, String fechaFin, String descripción, String centro, String moneda, String importe, String fechaRegistro, String estado, String motivoRechazo, String nombreUsuario, String idUsuario) {
-        this.id = id;
+    public Solicitud(String fechaInicio, String fechaFin, String descripcion, String centro, String moneda, String importe, String fechaRegistro, String fechaEnviado, String estado, String motivoRechazo, String nombreUsuario, String idUsuario, String id, String idEmpresa, String pais) {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.descripción = descripción;
+        this.descripcion = descripcion;
         this.centro = centro;
         this.moneda = moneda;
         this.importe = importe;
         this.fechaRegistro = fechaRegistro;
+        this.fechaEnviado = fechaEnviado;
         this.estado = estado;
         this.motivoRechazo = motivoRechazo;
         this.nombreUsuario = nombreUsuario;
         this.idUsuario = idUsuario;
+        this.id = id;
+        this.idEmpresa = idEmpresa;
+        this.pais = pais;
     }
 
     public String getFechaInicio() {
@@ -53,12 +59,12 @@ public class Solicitud {
         this.fechaFin = fechaFin;
     }
 
-    public String getDescripción() {
-        return descripción;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setDescripción(String descripción) {
-        this.descripción = descripción;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getCentro() {
@@ -123,6 +129,30 @@ public class Solicitud {
 
     public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public String getFechaEnviado() {
+        return fechaEnviado;
+    }
+
+    public void setFechaEnviado(String fechaEnviado) {
+        this.fechaEnviado = fechaEnviado;
+    }
+
+    public String getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(String idEmpresa) {
+        this.idEmpresa = idEmpresa;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
     }
 
     public String getId() {

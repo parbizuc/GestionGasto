@@ -7,26 +7,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -59,7 +49,7 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         presenter = new PresenterSolicitudImpl(getContext(), this);
-        CollectionReference dbSolicitud = presenter.connect();
+        final CollectionReference dbSolicitud = presenter.connect();
         View rootView = inflater.inflate(R.layout.fg_solicitudes, container, false);
         recyclerSolicitud = rootView.findViewById(R.id.recycler_solicitudes);
         recyclerSolicitud.setHasFixedSize(true);
@@ -74,7 +64,7 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
                 datosRegistrados.clear();
                 for (DocumentSnapshot document : snapshots.getDocuments()) {
                     Solicitud solicitud = document.toObject(Solicitud.class);
-                    if (document.contains("estado")) {
+                    if (solicitud.getEstado() != null) {
                         datosProcesados.add(solicitud);
                     } else {
                         datosRegistrados.add(solicitud);
@@ -100,7 +90,12 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
     }
 
     @Override
-    public void displayLabel() {
+    public void displayLabel(String text) {
+
+    }
+
+    @Override
+    public void changeActivity() {
 
     }
 
