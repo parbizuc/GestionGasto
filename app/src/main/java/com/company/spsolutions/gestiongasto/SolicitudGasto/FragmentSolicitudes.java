@@ -1,6 +1,7 @@
 package com.company.spsolutions.gestiongasto.SolicitudGasto;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,13 +13,16 @@ import android.view.ViewGroup;
 
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by coralRodriguez on 01/04/2019
@@ -30,6 +34,8 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
     private static String SECTION_NUMBER;
     PresenterSolicitudImpl presenter;
     List<Solicitud> datos = new ArrayList<>();
+    List<Solicitud> datosRegistrados = new ArrayList<>();
+    List<Solicitud> datosProcesados = new ArrayList<>();
 
     public static FragmentSolicitudes newInstance(int sectionNumber) {
         FragmentSolicitudes fragment = new FragmentSolicitudes();
@@ -43,28 +49,31 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         presenter = new PresenterSolicitudImpl(getContext(), this);
-        DatabaseReference dbSolicitud = presenter.connect();
+        final CollectionReference dbSolicitud = presenter.connect();
         View rootView = inflater.inflate(R.layout.fg_solicitudes, container, false);
         recyclerSolicitud = rootView.findViewById(R.id.recycler_solicitudes);
         recyclerSolicitud.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerSolicitud.setLayoutManager(layoutManager);
-        dbSolicitud.addValueEventListener(new ValueEventListener() {
+        sAdapter = new SolicitudAdapter(datos, getContext());
+        dbSolicitud.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Solicitud solicitud = dataSnapshot.getValue(Solicitud.class);
-                    datos.add(solicitud);
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                datosProcesados.clear();
+                datosRegistrados.clear();
+                for (DocumentSnapshot document : snapshots.getDocuments()) {
+                    Solicitud solicitud = document.toObject(Solicitud.class);
+                    if (solicitud.getEstado() != null) {
+                        datosProcesados.add(solicitud);
+                    } else {
+                        datosRegistrados.add(solicitud);
+                    }
                 }
-                datos = getArguments().getInt(SECTION_NUMBER) == 1 ? presenter.getDataRegistradas(datos) : presenter.getDataProcesadas(datos);
-                sAdapter = new SolicitudAdapter(datos, getContext());
+                datos = getArguments().getInt(SECTION_NUMBER) == 1 ? datosRegistrados : datosProcesados;
+                sAdapter.refreshSolicitudes(datos);
                 recyclerSolicitud.setAdapter(sAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+                sAdapter.notifyDataSetChanged();
             }
         });
         return rootView;
@@ -81,7 +90,12 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
     }
 
     @Override
-    public void displayLabel() {
+    public void displayLabel(String text) {
+
+    }
+
+    @Override
+    public void changeActivity() {
 
     }
 

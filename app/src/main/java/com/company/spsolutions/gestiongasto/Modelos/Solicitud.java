@@ -5,62 +5,162 @@ package com.company.spsolutions.gestiongasto.Modelos;
  */
 
 public class Solicitud {
-    String nombre;
-    String puesto;
-    String fecha;
-    String dineroSolicitado;
-    String estatus;
+    String fechaInicio;
+    String fechaFin;
+    String descripcion;
+    String centro;
+    String moneda;
+    String importe; //montoSolicitado
+    String fechaRegistro;
+    String fechaEnviado;
+    String estado;
+    String motivoRechazo;
+    String nombreUsuario;
+    String idUsuario;
+    String id;
+    String idEmpresa;
+    String pais;
 
     public Solicitud() {
 
     }
 
-
-    public Solicitud(String nombre, String puesto, String fecha, String dineroSolicitado, String estatus) {
-        this.nombre = nombre;
-        this.puesto = puesto;
-        this.fecha = fecha;
-        this.dineroSolicitado = dineroSolicitado;
-        this.estatus = estatus;
+    public Solicitud(String fechaInicio, String fechaFin, String descripcion, String centro, String moneda, String importe, String fechaRegistro, String fechaEnviado, String estado, String motivoRechazo, String nombreUsuario, String idUsuario, String id, String idEmpresa, String pais) {
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.descripcion = descripcion;
+        this.centro = centro;
+        this.moneda = moneda;
+        this.importe = importe;
+        this.fechaRegistro = fechaRegistro;
+        this.fechaEnviado = fechaEnviado;
+        this.estado = estado;
+        this.motivoRechazo = motivoRechazo;
+        this.nombreUsuario = nombreUsuario;
+        this.idUsuario = idUsuario;
+        this.id = id;
+        this.idEmpresa = idEmpresa;
+        this.pais = pais;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setFechaInicio(String fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
-    public String getPuesto() {
-        return puesto;
+    public String getFechaFin() {
+        return fechaFin;
     }
 
-    public String getFecha() {
-        return fecha;
+    public void setFechaFin(String fechaFin) {
+        this.fechaFin = fechaFin;
     }
 
-    public String getEstatus() {
-        return estatus;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setEstatus(String estatus) {
-        this.estatus = estatus;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getDineroSolicitado() {
-        return dineroSolicitado;
+    public String getCentro() {
+        return centro;
     }
 
-    public void setDineroSolicitado(String dineroSolicitado) {
-        this.dineroSolicitado = dineroSolicitado;
+    public void setCentro(String centro) {
+        this.centro = centro;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public String getMoneda() {
+        return moneda;
     }
 
-    public void setPuesto(String puesto) {
-        this.puesto = puesto;
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
     }
+
+    public String getImporte() {
+        return importe;
+    }
+
+    public void setImporte(String importe) {
+        this.importe = importe;
+    }
+
+    public String getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(String fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getMotivoRechazo() {
+        return motivoRechazo;
+    }
+
+    public void setMotivoRechazo(String motivoRechazo) {
+        this.motivoRechazo = motivoRechazo;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getFechaEnviado() {
+        return fechaEnviado;
+    }
+
+    public void setFechaEnviado(String fechaEnviado) {
+        this.fechaEnviado = fechaEnviado;
+    }
+
+    public String getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(String idEmpresa) {
+        this.idEmpresa = idEmpresa;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 }

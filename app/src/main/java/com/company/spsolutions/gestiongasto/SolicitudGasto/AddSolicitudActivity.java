@@ -2,48 +2,172 @@ package com.company.spsolutions.gestiongasto.SolicitudGasto;
 /**
  * Created by coralRodriguez on 28/03/19.
  */
+
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.format.DateFormat;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.company.spsolutions.gestiongasto.Modelos.Empresa;
+import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
+import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.company.spsolutions.gestiongasto.R;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AddSolicitudActivity extends AppCompatActivity implements PresenterSolicitud {
     /* AddSolicitudActivity es el activity para controlar cuando el usuario quiere añadir o editar una solicitd
-    * el método initComponents es el responsable de instanciar los componentes y sus listeners
-    * guardarSolicitud es el método que sera llamado cuando el usuario quiera registrar su solicitud
-    * el método mandarRevision se encarga de mandar la petición del usuario a revisar por el aprobador
+     * el método initComponents es el responsable de instanciar los componentes y sus listeners
+     * guardarSolicitud es el método que sera llamado cuando el usuario quiera registrar su solicitud
+     * el método mandarRevision se encarga de mandar la petición del usuario a revisar por el aprobador
      */
+    EditText fechaIniET, fechaFinET, motivoET, descripcionET, importeET, centroCostosET;
+    TextView usuarioTV;
+    Button grabarBTN, enviarBTN;
+    Usuario usuario;
+    Empresa empresa;
+    PresenterSolicitudImpl presenter;
+    ImageButton finiIB, ffinIB;
+    String fi, ff;
+
+    //Calendario para obtener fecha & hora
+    public final Calendar c = Calendar.getInstance();
+
+    //Variables para obtener la fecha
+    final int mes = c.get(Calendar.MONTH);
+    final int dia = c.get(Calendar.DAY_OF_MONTH);
+    final int anio = c.get(Calendar.YEAR);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addsolicitud);
+        initComponents();
+        setlisteners();
     }
-    /*
-    * Crear instancia de los elementos
-     */
-    public void initComponents(){}
 
     /*
-    * 1. Colocar los listeners a los botones de grabar y registrar
-    * 2. Colocar los listeners al datepicker
+     * Crear instancia de los elementos
      */
-    public void setlisteners(){}
+    private void initComponents() {
+        presenter = new PresenterSolicitudImpl(AddSolicitudActivity.this, this);
+        fechaFinET = findViewById(R.id.fechaFinas_et);
+        fechaIniET = findViewById(R.id.fechaInias_et);
+        motivoET = findViewById(R.id.motivo_et);
+        descripcionET = findViewById(R.id.descripcionas_et);
+        importeET = findViewById(R.id.importeas_et);
+        centroCostosET = findViewById(R.id.centrocostos_et);
+        usuarioTV = findViewById(R.id.usuarioas_tv);
+        grabarBTN = findViewById(R.id.grabar_btn);
+        enviarBTN = findViewById(R.id.enviara_btn);
+        finiIB = findViewById(R.id.fechaInias_ib);
+        ffinIB = findViewById(R.id.fechaFinas_ib);
+        fi = "";
+        ff = "";
+        usuario = Usuario.getInstance();
+        empresa = Empresa.getInstance();
+        usuarioTV.setText(usuario.getNombre());
+    }
 
     /*
-    * 1. Crear la logica para guardar una solicitud
+     * 1. Colocar los listeners a los botones de grabar y registrar
+     * 2. Colocar los listeners al datepicker
      */
-    public void guardarSolicitud(){}
+    private void setlisteners() {
+        enviarBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addSolicitud(false);
+            }
+        });
+        grabarBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addSolicitud(true);
+            }
+        });
+        finiIB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker(fechaIniET);
+            }
+        });
+
+        ffinIB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker(fechaFinET);
+            }
+        });
+    }
+
 
     /*
-    * Crear logica para mandar a revisar la solicirtud
+     * 1. Crear la logica para guardar una solicitud
+     * 2. Crear logica para mandar a revisar la solicitud
      */
-    public void mandarRevision(){}
+    private void addSolicitud(Boolean isRegistrada) {
+        String descripcion = descripcionET.getText().toString();
+        String centro = centroCostosET.getText().toString();
+        String importe = importeET.getText().toString();
+        if (isRegistrada) {
+            presenter.sendData(fi, ff, descripcion, centro, empresa.getMoneda(), importe, getDate(), null, null, null, usuario.getNombre(), usuario.getId(), usuario.getIdEmpresa(), usuario.getPais());
+        } else {
+            presenter.sendData(fi, ff, descripcion, centro, empresa.getMoneda(), importe, null, getDate(), "Por aprobar", null, usuario.getNombre(), usuario.getId(), usuario.getIdEmpresa(), usuario.getPais());
+        }
+
+    }
+
+    private String getDate() {
+        String date;
+        Date d = new Date();
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+        date = simpleDate.format(d);
+        return date;
+    }
+
+    private void showDataPicker(final EditText fechaET) {
+        DatePickerDialog recogerFecha = new DatePickerDialog(AddSolicitudActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                //0 = enero
+                final int mesActual = month + 1;
+                //Antepone el 0 si son menores de 10
+                String diaFormateado = (dayOfMonth < 10) ? "0" + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
+                String mesFormateado = (mesActual < 10) ? "0" + String.valueOf(mesActual) : String.valueOf(mesActual);
+                if (fechaET.getId() == R.id.fechaInias_et) {
+                    fi = anio + "-" + mesFormateado + "-" + diaFormateado;
+                } else {
+                    ff = anio + "-" + mesFormateado + "-" + diaFormateado;
+                }
+                fechaET.setText(diaFormateado + "/" + mesFormateado + "/" + anio);
+            }
+        }, anio, mes, dia);
+        recogerFecha.show();
+    }
 
     /*
-    * Lanzar pop up
+     * Lanzar pop up
      */
-    public void popUp(){}
+    private void popUp() {
+    }
+
 
     @Override
     public void displayError(String error) {
@@ -56,8 +180,22 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
     }
 
     @Override
-    public void displayLabel() {
+    public void displayLabel(String text) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddSolicitudActivity.this);
+        builder.setMessage(text).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //algo
+            }
+        });
+        builder.show();
 
+    }
+
+    @Override
+    public void changeActivity() {
+        finish();
+        /*Intent returnA = new Intent(AddSolicitudActivity.this,SolicitudActivity.class);
+        startActivity(returnA);*/
     }
 
 }

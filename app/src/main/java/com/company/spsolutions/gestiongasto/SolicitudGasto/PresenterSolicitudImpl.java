@@ -1,16 +1,23 @@
 package com.company.spsolutions.gestiongasto.SolicitudGasto;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,34 +42,38 @@ public class PresenterSolicitudImpl {
     /*
      * Conectar a la base de datos para obtener los registros
      */
-    public DatabaseReference connect() {
+    public CollectionReference connect() {
         service = new SolicitudService();
         return service.connect();
     }
-    /*
-    * Separa la lógica de la vista para obtener los registros de solicitudes registradas
-     */
-    public List<Solicitud> getDataRegistradas(List<Solicitud> solicitudes) {
-        List<Solicitud> registradas = new ArrayList<>();
-        for (Solicitud solicitud : solicitudes) {
-            if (solicitud.getEstatus() == null) {
-                registradas.add(solicitud);
-            }
+
+    public void sendData(String fechaInicio, String fechaFin, String descripcion, String centro, String moneda, String importe, String fechaRegistro, String fechaEnviado, String estado, String motivoRechazo, String nombreUsuario, String idUsuario, String idEmpresa, String pais) {
+        if (validarCampos(fechaInicio, fechaFin, descripcion, centro, importe)) {
+            DocumentReference ref = connect().document();
+            String idDoc = ref.getId();
+            Solicitud solicitud = new Solicitud(fechaInicio, fechaFin, descripcion, centro, moneda, importe, fechaRegistro, fechaEnviado, estado, null, nombreUsuario, idUsuario, idDoc, idEmpresa, pais);
+            ref.set(solicitud).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    delegate.changeActivity();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    delegate.displayLabel("Ocurrio un error");
+                }
+            });
+        } else {
+            delegate.displayLabel("Ocurrio un error, verifica los datos");
         }
-        return registradas;
     }
 
-    /*
-     * Separa la lógica de la vista para obtener los registros de solicitudes ya procesadas
-     */
-    public List<Solicitud> getDataProcesadas(List<Solicitud> solicitudes) {
-        List<Solicitud> procesadas = new ArrayList<>();
-        for (Solicitud solicitud : solicitudes) {
-            if (solicitud.getEstatus() != null) {
-                procesadas.add(solicitud);
-            }
+    private Boolean validarCampos(String fechaInicio, String fechaFin, String descripcion, String centro, String importe) {
+        if (fechaInicio.equals("")  || fechaFin.equals("") || descripcion.equals("") || centro.equals("") || importe.equals("")) {
+            //mensaje informando que falta datos
+            return false;
         }
-        return procesadas;
+        return true;
     }
 
     /*

@@ -4,6 +4,7 @@ package com.company.spsolutions.gestiongasto.MenuPrincipal;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.company.spsolutions.gestiongasto.R;
+import com.company.spsolutions.gestiongasto.SolicitudGasto.SolicitudActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -36,12 +38,22 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
         Picasso.get().load(itemMenu.image).into(cardHolder.imageIV);
         cardHolder.titleTV.setText(itemMenu.title);
         cardHolder.cardViewCV.setOnClickListener(new View.OnClickListener() {
+            /*Fata controlar el listener segun el rol*/
             @Override
             public void onClick(View v) {
-                Toast.makeText(contexto,"mensaje" + i,Toast.LENGTH_SHORT).show();
+                switch (i) {
+                    case 0:
+                        Intent sActivity = new Intent(contexto, SolicitudActivity.class);
+                        contexto.startActivity(sActivity);
+                        break;
+                    default:
+                        Toast.makeText(contexto, "mensaje" + i, Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

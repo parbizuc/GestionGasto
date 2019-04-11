@@ -36,7 +36,12 @@ public class EvaluarSolicitud extends AppCompatActivity implements PresenterSoli
     }
 
     @Override
-    public void displayLabel() {
+    public void displayLabel(String text) {
+
+    }
+
+    @Override
+    public void changeActivity() {
 
     }
 }

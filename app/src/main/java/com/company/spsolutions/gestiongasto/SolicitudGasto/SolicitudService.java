@@ -8,8 +8,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,13 +23,12 @@ import java.util.List;
 public class SolicitudService {
     /* Esta clase es la que se encargara de hacer consultas a firebase para las solicitudes
      */
-    FirebaseDatabase database;
-    DatabaseReference dbSolicitud;
+    FirebaseFirestore database;
+    CollectionReference dbSolicitud;
 
-    public DatabaseReference connect () {
-        dbSolicitud = FirebaseDatabase.getInstance().getReference();
-        database = FirebaseDatabase.getInstance();
-        dbSolicitud = database.getReference().child("solicitudes");
+    public CollectionReference connect () {
+        database = FirebaseFirestore.getInstance();
+        dbSolicitud = database.collection("solicitudes");
         return dbSolicitud;
     }
 

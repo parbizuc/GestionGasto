@@ -1,5 +1,6 @@
 package com.company.spsolutions.gestiongasto.SolicitudGasto;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -25,7 +26,7 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
      */
     private FragmentSolicitudes.SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private  FloatingActionButton addsolicitud_fab;
+    private FloatingActionButton addsolicitud_fab;
 
 
     @Override
@@ -45,14 +46,13 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
     }
 
     /*
-    *Hacer la logica para ocultar el boton flotante según los perfiles
+     *Hacer la logica para ocultar el boton flotante según los perfiles
      */
-    public void setListeners(){
+    public void setListeners() {
         addsolicitud_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Mandar a agregar una solicitud", Toast.LENGTH_SHORT).show();
-
+                agregarSolicitud();
             }
         });
     }
@@ -68,7 +68,12 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
     }
 
     @Override
-    public void displayLabel() {
+    public void displayLabel(String text) {
+
+    }
+
+    @Override
+    public void changeActivity() {
 
     }
 
@@ -77,7 +82,8 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
      * 1. Agregar intent
      */
     public void agregarSolicitud() {
-
+        Intent nsolicitud = new Intent(SolicitudActivity.this, AddSolicitudActivity.class);
+        startActivity(nsolicitud);
     }
 
     /*
