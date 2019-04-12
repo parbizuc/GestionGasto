@@ -1,24 +1,19 @@
 package com.company.spsolutions.gestiongasto.SolicitudGasto;
 
 import android.content.Context;
-import android.content.Intent;
-import android.text.format.DateFormat;
-import android.util.Log;
+
 
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
+import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Query;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Created by coralRodriguez on 28/03/19.
@@ -47,11 +42,11 @@ public class PresenterSolicitudImpl {
         return service.connect();
     }
 
-    public void sendData(String fechaInicio, String fechaFin, String descripcion, String centro, String moneda, String importe, String fechaRegistro, String fechaEnviado, String estado, String motivoRechazo, String nombreUsuario, String idUsuario, String idEmpresa, String pais) {
-        if (validarCampos(fechaInicio, fechaFin, descripcion, centro, importe)) {
+    public void sendData(String fechaInicio, String fechaFin, String descripcion, String centro, String motivo, String moneda, String importe, String fechaRegistro, String fechaEnviado, String estado, String nombreUsuario, String idUsuario, String idEmpresa, String pais) {
+        if (validarCampos(fechaInicio, fechaFin, descripcion, centro, importe, motivo)) {
             DocumentReference ref = connect().document();
             String idDoc = ref.getId();
-            Solicitud solicitud = new Solicitud(fechaInicio, fechaFin, descripcion, centro, moneda, importe, fechaRegistro, fechaEnviado, estado, null, nombreUsuario, idUsuario, idDoc, idEmpresa, pais);
+            Solicitud solicitud = new Solicitud(fechaInicio, fechaFin, descripcion, centro, motivo, moneda, importe, fechaRegistro, fechaEnviado, estado, null, nombreUsuario, idUsuario, idDoc, idEmpresa, pais);
             ref.set(solicitud).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -68,8 +63,46 @@ public class PresenterSolicitudImpl {
         }
     }
 
-    private Boolean validarCampos(String fechaInicio, String fechaFin, String descripcion, String centro, String importe) {
-        if (fechaInicio.equals("")  || fechaFin.equals("") || descripcion.equals("") || centro.equals("") || importe.equals("")) {
+    public void editData(String fechaInicio, String fechaFin, String descripcion, String centro, String motivo, String importe, String fechaRegistro, String fechaEnviado, String estado, String idSolicitud) {
+        if (validarCampos(fechaInicio, fechaFin, descripcion, centro, importe, motivo)) {
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("fechaInicio", fechaInicio);
+            updates.put("fechaFin", fechaFin);
+            updates.put("descripcion", descripcion);
+            updates.put("centro", centro);
+            updates.put("motivo", motivo);
+            updates.put("importe", importe);
+            updates.put("fechaRegistro", fechaRegistro);
+            updates.put("fechaEnviado", fechaEnviado);
+            updates.put("estado", estado);
+            connect().document(idSolicitud).update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    delegate.changeActivity();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    delegate.displayLabel("Ocurrio un error");
+                }
+            });
+        } else {
+            delegate.displayLabel("Ocurrio un error, verifica los datos");
+        }
+    }
+
+    public Query getQuery() {
+        Query ref;
+        if (Usuario.getInstance().getRol().equals("usuario")) {
+            ref =  connect().whereEqualTo("idUsuario",Usuario.getInstance().getId());
+        }else{
+            ref = connect().orderBy("idUsuario");
+        }
+        return ref;
+    }
+
+    private Boolean validarCampos(String fechaInicio, String fechaFin, String descripcion, String centro, String importe, String motivo) {
+        if (fechaInicio.equals("") || fechaFin.equals("") || descripcion.equals("") || centro.equals("") || importe.equals("") || motivo.equals("")) {
             //mensaje informando que falta datos
             return false;
         }

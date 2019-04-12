@@ -1,7 +1,6 @@
 package com.company.spsolutions.gestiongasto.SolicitudGasto;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.R;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -49,7 +47,6 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         presenter = new PresenterSolicitudImpl(getContext(), this);
-        final CollectionReference dbSolicitud = presenter.connect();
         View rootView = inflater.inflate(R.layout.fg_solicitudes, container, false);
         recyclerSolicitud = rootView.findViewById(R.id.recycler_solicitudes);
         recyclerSolicitud.setHasFixedSize(true);
@@ -57,26 +54,31 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerSolicitud.setLayoutManager(layoutManager);
         sAdapter = new SolicitudAdapter(datos, getContext());
-        dbSolicitud.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        setListeners();
+        return rootView;
+    }
+
+    private void setListeners() {
+        presenter.getQuery().addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
                 datosProcesados.clear();
                 datosRegistrados.clear();
                 for (DocumentSnapshot document : snapshots.getDocuments()) {
                     Solicitud solicitud = document.toObject(Solicitud.class);
-                    if (solicitud.getEstado() != null) {
-                        datosProcesados.add(solicitud);
-                    } else {
-                        datosRegistrados.add(solicitud);
-                    }
-                }
+                            if (solicitud.getEstado() != null) {
+                                datosProcesados.add(solicitud);
+                            } else {
+                                datosRegistrados.add(solicitud);
+                            }
+                        }
                 datos = getArguments().getInt(SECTION_NUMBER) == 1 ? datosRegistrados : datosProcesados;
                 sAdapter.refreshSolicitudes(datos);
                 recyclerSolicitud.setAdapter(sAdapter);
                 sAdapter.notifyDataSetChanged();
             }
         });
-        return rootView;
+
     }
 
     @Override
