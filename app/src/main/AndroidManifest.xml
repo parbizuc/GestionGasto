@@ -11,16 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SolicitudGasto.ReviewActivity"></activity>
         <activity
             android:name=".Informes.LiquidarActivity"
             android:label="Liquidar"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SolicitudGasto.EvaluarSolicitud" />
         <activity
             android:name=".SolicitudGasto.SolicitudActivity"
             android:label="Gestión de Solicitudes"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Gastos.AddGastoActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Gastos.AddGastoActivity" />
         <activity
             android:name=".Gastos.GastosActivity"
             android:label="Gestión de Gastos"
@@ -28,9 +29,7 @@
         <activity
             android:name=".Informes.InformeActivity"
             android:label="Informe de Gastos"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".MenuPrincipal.MainActivity" />
         <activity android:name=".Login.LoginActivity">
             <intent-filter>

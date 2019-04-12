@@ -1,22 +1,16 @@
 package com.company.spsolutions.gestiongasto.SolicitudGasto;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.R;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -38,7 +32,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
      */
     @Override
     public void onBindViewHolder(final CardHolder registroHolder, final int i) {
-        Solicitud itemSolicitud = itemsSolicitud.get(i);
+        final Solicitud itemSolicitud = itemsSolicitud.get(i);
         registroHolder.nombreTV.setText(itemSolicitud.getNombreUsuario());
         registroHolder.descripcionTV.setText(itemSolicitud.getDescripcion());
         registroHolder.fechaTV.setText(itemSolicitud.getFechaInicio());
@@ -51,7 +45,15 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
         registroHolder.registroCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(contexto, "MANDAR A EDITAR" + i, Toast.LENGTH_SHORT).show();
+                if ((itemSolicitud.getEstado() == null)) {
+                    Intent editar = new Intent(contexto, AddSolicitudActivity.class);
+                    editar.putExtra("solicitud", itemSolicitud);
+                    contexto.startActivity(editar);
+                } else {
+                    Intent editar = new Intent(contexto, ReviewActivity.class);
+                    editar.putExtra("solicitud", itemSolicitud);
+                    contexto.startActivity(editar);
+                }
             }
         });
     }
@@ -91,15 +93,6 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
         this.itemsSolicitud.clear();
         this.itemsSolicitud.addAll(solicitudes);
         notifyDataSetChanged();
-    }
-
-
-    /*
-     * 1. Mandar a la pantalla para editar una solicitud (crear intent)
-     * 2. Pasar los datos a la nueva actividad
-     */
-    public void editSolicitud() {
-
     }
 
 }

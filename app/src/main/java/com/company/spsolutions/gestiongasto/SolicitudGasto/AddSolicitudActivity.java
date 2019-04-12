@@ -4,15 +4,10 @@ package com.company.spsolutions.gestiongasto.SolicitudGasto;
  */
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -37,6 +32,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
      * el método mandarRevision se encarga de mandar la petición del usuario a revisar por el aprobador
      */
     EditText fechaIniET, fechaFinET, motivoET, descripcionET, importeET, centroCostosET;
+    Solicitud solicitud;
     TextView usuarioTV;
     Button grabarBTN, enviarBTN;
     Usuario usuario;
@@ -44,6 +40,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
     PresenterSolicitudImpl presenter;
     ImageButton finiIB, ffinIB;
     String fi, ff;
+    Boolean isEditar;
 
     //Calendario para obtener fecha & hora
     public final Calendar c = Calendar.getInstance();
@@ -67,6 +64,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
      */
     private void initComponents() {
         presenter = new PresenterSolicitudImpl(AddSolicitudActivity.this, this);
+        isEditar = getIntent().hasExtra("solicitud");
         fechaFinET = findViewById(R.id.fechaFinas_et);
         fechaIniET = findViewById(R.id.fechaInias_et);
         motivoET = findViewById(R.id.motivo_et);
@@ -82,6 +80,17 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
         ff = "";
         usuario = Usuario.getInstance();
         empresa = Empresa.getInstance();
+        if (isEditar) {
+            solicitud = (Solicitud) getIntent().getSerializableExtra("solicitud");
+            descripcionET.setText(solicitud.getDescripcion());
+            motivoET.setText(solicitud.getMotivo());
+            centroCostosET.setText(solicitud.getCentro());
+            importeET.setText(solicitud.getImporte());
+            fechaIniET.setText(convertDate(solicitud.getFechaInicio()));
+            fechaFinET.setText(convertDate(solicitud.getFechaFin()));
+            fi = solicitud.getFechaInicio();
+            ff = solicitud.getFechaFin();
+        }
         usuarioTV.setText(usuario.getNombre());
     }
 
@@ -93,13 +102,21 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
         enviarBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addSolicitud(false);
+                if (isEditar) {
+                    editSolicitud(false);
+                } else {
+                    addSolicitud(false);
+                }
             }
         });
         grabarBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addSolicitud(true);
+                if (isEditar) {
+                    editSolicitud(true);
+                } else {
+                    addSolicitud(true);
+                }
             }
         });
         finiIB.setOnClickListener(new View.OnClickListener() {
@@ -124,13 +141,41 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
      */
     private void addSolicitud(Boolean isRegistrada) {
         String descripcion = descripcionET.getText().toString();
+        String motivo = motivoET.getText().toString();
         String centro = centroCostosET.getText().toString();
         String importe = importeET.getText().toString();
         if (isRegistrada) {
-            presenter.sendData(fi, ff, descripcion, centro, empresa.getMoneda(), importe, getDate(), null, null, null, usuario.getNombre(), usuario.getId(), usuario.getIdEmpresa(), usuario.getPais());
+            presenter.sendData(fi, ff, descripcion, centro, motivo, empresa.getMoneda(), importe, getDate(), null, null, usuario.getNombre(), usuario.getId(), usuario.getIdEmpresa(), usuario.getPais());
         } else {
-            presenter.sendData(fi, ff, descripcion, centro, empresa.getMoneda(), importe, null, getDate(), "Por aprobar", null, usuario.getNombre(), usuario.getId(), usuario.getIdEmpresa(), usuario.getPais());
+            presenter.sendData(fi, ff, descripcion, centro, motivo, empresa.getMoneda(), importe, null, getDate(), "Por aprobar", usuario.getNombre(), usuario.getId(), usuario.getIdEmpresa(), usuario.getPais());
         }
+
+    }
+
+    private void editSolicitud(Boolean isRegistrada) {
+        String descripcion = descripcionET.getText().toString();
+        String motivo = motivoET.getText().toString();
+        String centro = centroCostosET.getText().toString();
+        String importe = importeET.getText().toString();
+        if (isRegistrada) {
+            presenter.editData(fi, ff, descripcion, centro, motivo, importe, getDate() ,null, null, solicitud.getId());
+        } else {
+            presenter.editData(fi, ff, descripcion, centro, motivo, importe, solicitud.getFechaRegistro(), getDate(), "Por aprobar", solicitud.getId());
+        }
+
+    }
+
+    private String convertDate(String fecha) {
+        String newDate;
+        Date date1 = null;
+        try {
+            date1 = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyy");
+        newDate = format.format(date1);
+        return newDate;
 
     }
 

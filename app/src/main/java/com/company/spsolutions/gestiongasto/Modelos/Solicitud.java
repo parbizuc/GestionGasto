@@ -1,10 +1,12 @@
 package com.company.spsolutions.gestiongasto.Modelos;
 
+import java.io.Serializable;
+
 /**
  * Created by coralRodriguez on 27/03/19.
  */
 
-public class Solicitud {
+public class Solicitud implements Serializable {
     String fechaInicio;
     String fechaFin;
     String descripcion;
@@ -14,6 +16,7 @@ public class Solicitud {
     String fechaRegistro;
     String fechaEnviado;
     String estado;
+    String motivo;
     String motivoRechazo;
     String nombreUsuario;
     String idUsuario;
@@ -25,11 +28,12 @@ public class Solicitud {
 
     }
 
-    public Solicitud(String fechaInicio, String fechaFin, String descripcion, String centro, String moneda, String importe, String fechaRegistro, String fechaEnviado, String estado, String motivoRechazo, String nombreUsuario, String idUsuario, String id, String idEmpresa, String pais) {
+    public Solicitud(String fechaInicio, String fechaFin, String descripcion, String centro, String motivo, String moneda, String importe, String fechaRegistro, String fechaEnviado, String estado, String motivoRechazo, String nombreUsuario, String idUsuario, String id, String idEmpresa, String pais) {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.descripcion = descripcion;
         this.centro = centro;
+        this.motivo = motivo;
         this.moneda = moneda;
         this.importe = importe;
         this.fechaRegistro = fechaRegistro;
@@ -163,4 +167,11 @@ public class Solicitud {
         this.id = id;
     }
 
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
 }
