@@ -92,12 +92,12 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
     }
 
     @Override
-    public void displayLabel(String text) {
+    public void changeActivity() {
 
     }
 
     @Override
-    public void changeActivity() {
+    public void setError(Integer type, String texto) {
 
     }
 

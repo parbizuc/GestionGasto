@@ -13,9 +13,9 @@ public class Usuario {
     private static Usuario ourInstance = null;
 
     public static Usuario getInstance() {
-        if (ourInstance == null) {
+    /*    if (ourInstance == null) {
             throw new AssertionError("Llama al init del Usuario");
-        }
+        }*/
         return ourInstance;
     }
 
@@ -33,9 +33,9 @@ public class Usuario {
 
 
     public synchronized static Usuario init(String rol, String id, String nombre, String idEmpresa, String nombreEmpresa, String pais) {
-        if (ourInstance != null) {
+        /*if (ourInstance != null) {
             throw new AssertionError("Ya existe un usuario");
-        }
+        }*/
         ourInstance = new Usuario(rol, id, nombre, idEmpresa, nombreEmpresa, pais);
         return ourInstance;
     }

@@ -11,9 +11,9 @@ public class Empresa {
     private static Empresa ourInstance = null;
 
     public static Empresa getInstance() {
-        if (ourInstance == null) {
+        /*if (ourInstance == null) {
             throw new AssertionError("Llama al init de Empresa");
-        }
+        }*/
         return ourInstance;
     }
 
@@ -28,9 +28,9 @@ public class Empresa {
     }
 
     public synchronized static Empresa init(String id, String nombre, String moneda, String prefijoPais) {
-        if (ourInstance != null) {
+       /* if (ourInstance != null) {
             throw new AssertionError("Ya existe una empresa");
-        }
+        }*/
         ourInstance = new Empresa(id, nombre, moneda, prefijoPais);
         return ourInstance;
     }

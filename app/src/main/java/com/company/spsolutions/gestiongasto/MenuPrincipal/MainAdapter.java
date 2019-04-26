@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.company.spsolutions.gestiongasto.Informes.InformeActivity;
 import com.company.spsolutions.gestiongasto.R;
 import com.company.spsolutions.gestiongasto.SolicitudGasto.SolicitudActivity;
 import com.squareup.picasso.Picasso;
@@ -45,6 +46,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
                     case 0:
                         Intent sActivity = new Intent(contexto, SolicitudActivity.class);
                         contexto.startActivity(sActivity);
+                        break;
+                    case 2:
+                        Intent iActivity = new Intent(contexto, InformeActivity.class);
+                        contexto.startActivity(iActivity);
                         break;
                     default:
                         Toast.makeText(contexto, "mensaje" + i, Toast.LENGTH_SHORT).show();

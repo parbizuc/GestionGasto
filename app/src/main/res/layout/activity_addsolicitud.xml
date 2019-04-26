@@ -2,20 +2,77 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addSolicitud_ll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".SolicitudGasto.AddSolicitudActivity">
 
-    <TextView
-        android:id="@+id/usuarioas_tv"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbarAddS"
+            android:background="@color/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            tools:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            tools:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:gravity="center"
+                android:text="Nuevo Anticipo"
+                android:textColor="@android:color/white"
+                android:textSize="20dp" />
+
+
+            <TextView
+                android:id="@+id/empresa_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
+                android:text="spSOLUTIONS"
+                android:textColor="@android:color/white"
+                android:textSize="10sp" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="8dp"
-        android:text="Juan Perez"
-        android:textColor="@android:color/black"
-        android:textSize="30sp" />
+        android:background="#3351606F">
+
+        <TextView
+            android:id="@+id/usuarioas_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="5dp"
+            android:text="Juan Perez"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/rol_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:text="usuario"
+            android:textColor="@color/azulApp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,35 +88,35 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Periodo" />
+                android:text="Periodo *" />
 
             <EditText
                 android:id="@+id/fechaInias_et"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:textSize="10sp"
-                android:hint="De:20/10/19" />
+                android:hint="De:20/10/19"
+                android:textSize="13sp" />
 
             <ImageButton
                 android:id="@+id/fechaInias_ib"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
                 android:layout_gravity="center"
                 android:src="@android:drawable/ic_menu_my_calendar" />
 
             <EditText
                 android:id="@+id/fechaFinas_et"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:textSize="10sp"
-                android:hint="Hasta:20/10/19" />
+                android:layout_marginLeft="15dp"
+                android:hint="Hasta:20/10/19"
+                android:textSize="13sp" />
 
             <ImageButton
                 android:id="@+id/fechaFinas_ib"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
                 android:layout_gravity="center"
                 android:src="@android:drawable/ic_menu_my_calendar" />
         </LinearLayout>
@@ -71,15 +128,17 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="Motivo" />
+                android:text="Motivo *" />
 
             <EditText
                 android:id="@+id/motivo_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:nextFocusDown="@id/descripcionas_et" />
 
         </LinearLayout>
 
@@ -90,15 +149,17 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
+                android:imeOptions="actionDone"
                 android:text="Descripción" />
 
             <EditText
                 android:id="@+id/descripcionas_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone" />
 
         </LinearLayout>
 
@@ -109,7 +170,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:text="Centro de costos" />
@@ -117,7 +178,8 @@
             <EditText
                 android:id="@+id/centrocostos_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone" />
 
         </LinearLayout>
 
@@ -133,13 +195,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:inputType="numberDecimal"
-                android:text="Importe" />
+                android:text="Importe *" />
 
             <EditText
                 android:id="@+id/importeas_et"
-                android:layout_width="wrap_content"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
-                android:hint="$0.00" />
+                android:digits="0123456789."
+                android:hint="$0.00"
+                android:inputType="numberDecimal"
+                android:maxLength="10"
+                android:singleLine="true" />
 
         </LinearLayout>
 
@@ -151,22 +217,22 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/grabar_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/grabar_btn"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/btn_addgasto"
-                android:backgroundTint="#13CE66"
                 android:text="Grabar"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white" />
 
             <Button
+                android:id="@+id/enviara_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/enviara_btn"
                 android:background="@drawable/btn_addgasto"
-                android:text="Enviar a Aprobar"
+                android:backgroundTint="#13CE66"
+                android:text="Grabar y Enviar"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white" />
 

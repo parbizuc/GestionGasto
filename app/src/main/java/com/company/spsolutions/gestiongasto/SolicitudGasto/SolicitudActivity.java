@@ -68,12 +68,12 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
     }
 
     @Override
-    public void displayLabel(String text) {
+    public void changeActivity() {
 
     }
 
     @Override
-    public void changeActivity() {
+    public void setError(Integer type, String texto) {
 
     }
 

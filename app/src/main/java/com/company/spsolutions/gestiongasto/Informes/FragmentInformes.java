@@ -56,8 +56,8 @@ public class FragmentInformes extends Fragment {
 
     public List<ItemInforme> getDataInformados() {
         List<ItemInforme> solicitudes = new ArrayList<ItemInforme>();
-        solicitudes.add(new ItemInforme("Viaje a Cancún", "29/10/19", "$24,000", "Por aprobar"));
-        solicitudes.add(new ItemInforme("Viaje a Guadalajara", "30/01/19", "$12,000", "Por aprobar"));
+        solicitudes.add(new ItemInforme("Viaje a Cancún", "29/10/19", "$24,000", "POR APROBAR"));
+        solicitudes.add(new ItemInforme("Viaje a Guadalajara", "30/01/19", "$12,000", "POR APROBAR"));
         return solicitudes;
     }
 

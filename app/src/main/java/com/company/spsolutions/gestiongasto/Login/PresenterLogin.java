@@ -14,4 +14,8 @@ public interface PresenterLogin {
     void displayLoader(boolean loader);
 
     void successLogin();
+
+    void signIn();
+
+    void failSignIn();
 }

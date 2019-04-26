@@ -4,16 +4,26 @@ package com.company.spsolutions.gestiongasto.SolicitudGasto;
  */
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.inputmethodservice.KeyboardView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.company.spsolutions.gestiongasto.Modelos.Empresa;
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
@@ -33,7 +43,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
      */
     EditText fechaIniET, fechaFinET, motivoET, descripcionET, importeET, centroCostosET;
     Solicitud solicitud;
-    TextView usuarioTV;
+    TextView usuarioTV, rolTV, empresaTV;
     Button grabarBTN, enviarBTN;
     Usuario usuario;
     Empresa empresa;
@@ -41,6 +51,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
     ImageButton finiIB, ffinIB;
     String fi, ff;
     Boolean isEditar;
+    LinearLayout ll;
 
     //Calendario para obtener fecha & hora
     public final Calendar c = Calendar.getInstance();
@@ -63,6 +74,9 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
      * Crear instancia de los elementos
      */
     private void initComponents() {
+        /*toolbar = (Toolbar) findViewById(R.id.toolbarAddS);
+        setSupportActionBar(toolbar);*/
+        getSupportActionBar().hide();
         presenter = new PresenterSolicitudImpl(AddSolicitudActivity.this, this);
         isEditar = getIntent().hasExtra("solicitud");
         fechaFinET = findViewById(R.id.fechaFinas_et);
@@ -72,6 +86,8 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
         importeET = findViewById(R.id.importeas_et);
         centroCostosET = findViewById(R.id.centrocostos_et);
         usuarioTV = findViewById(R.id.usuarioas_tv);
+        rolTV = findViewById(R.id.rol_tv);
+        empresaTV = findViewById(R.id.empresa_tv);
         grabarBTN = findViewById(R.id.grabar_btn);
         enviarBTN = findViewById(R.id.enviara_btn);
         finiIB = findViewById(R.id.fechaInias_ib);
@@ -92,6 +108,9 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
             ff = solicitud.getFechaFin();
         }
         usuarioTV.setText(usuario.getNombre());
+        rolTV.setText(usuario.getRol());
+        empresaTV.setText(empresa.getNombre());
+        ll = findViewById(R.id.addSolicitud_ll);
     }
 
     /*
@@ -99,6 +118,33 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
      * 2. Colocar los listeners al datepicker
      */
     private void setlisteners() {
+        fechaIniET.setFocusable(false);
+        fechaFinET.setFocusable(false);
+        fechaFinET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker(fechaFinET);
+            }
+        });
+        fechaIniET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker(fechaIniET);
+            }
+        });
+        finiIB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker(fechaIniET);
+            }
+        });
+
+        ffinIB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker(fechaFinET);
+            }
+        });
         enviarBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,17 +165,16 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
                 }
             }
         });
-        finiIB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDataPicker(fechaIniET);
-            }
-        });
 
-        ffinIB.setOnClickListener(new View.OnClickListener() {
+        motivoET.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDataPicker(fechaFinET);
+                ll.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(ll.getWindowToken(), 0);
+
             }
         });
     }
@@ -158,9 +203,9 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
         String centro = centroCostosET.getText().toString();
         String importe = importeET.getText().toString();
         if (isRegistrada) {
-            presenter.editData(fi, ff, descripcion, centro, motivo, importe, getDate() ,null, null, solicitud.getId());
+            presenter.editData(fi, ff, descripcion, centro, motivo, importe, getDate(), null, null, solicitud.getId());
         } else {
-            presenter.editData(fi, ff, descripcion, centro, motivo, importe, solicitud.getFechaRegistro(), getDate(), "Por aprobar", solicitud.getId());
+            presenter.editData(fi, ff, descripcion, centro, motivo, importe, solicitud.getFechaRegistro(), getDate(), "POR APROBAR", solicitud.getId());
         }
 
     }
@@ -191,7 +236,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
         DatePickerDialog recogerFecha = new DatePickerDialog(AddSolicitudActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                //0 = enero
+//0 = enero
                 final int mesActual = month + 1;
                 //Antepone el 0 si son menores de 10
                 String diaFormateado = (dayOfMonth < 10) ? "0" + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
@@ -224,23 +269,41 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
 
     }
 
-    @Override
-    public void displayLabel(String text) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddSolicitudActivity.this);
-        builder.setMessage(text).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //algo
-            }
-        });
-        builder.show();
-
-    }
 
     @Override
     public void changeActivity() {
         finish();
         /*Intent returnA = new Intent(AddSolicitudActivity.this,SolicitudActivity.class);
         startActivity(returnA);*/
+    }
+
+    @Override
+    public void setError(Integer type, String texto) {
+        switch (type) {
+            case 0:
+                fechaIniET.setError(texto);
+                break;
+            case 1:
+                fechaFinET.setError(texto);
+                break;
+            case 2:
+                motivoET.setError(texto);
+                break;
+            case 3:
+                importeET.setError(texto);
+                break;
+            case 4:
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddSolicitudActivity.this);
+                builder.setMessage(texto).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //algo
+                    }
+                });
+                builder.show();
+                break;
+            default:
+                break;
+        }
     }
 
 }

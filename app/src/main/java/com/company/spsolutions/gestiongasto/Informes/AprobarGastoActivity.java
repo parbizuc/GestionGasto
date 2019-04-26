@@ -44,4 +44,24 @@ public class AprobarGastoActivity extends AppCompatActivity implements Presenter
     * Logica de los botones del popup
      */
     public void showPopUp(){}
+
+    @Override
+    public String getTotal() {
+        return null;
+    }
+
+    @Override
+    public void changeTotal(String total) {
+
+    }
+
+    @Override
+    public void displayLabel(String message) {
+
+    }
+
+    @Override
+    public void changeActivity() {
+
+    }
 }
