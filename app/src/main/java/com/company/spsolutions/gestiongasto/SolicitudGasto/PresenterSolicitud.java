@@ -8,7 +8,7 @@ public interface PresenterSolicitud {
 
     void displayLoader(boolean loader);
 
-    void displayLabel(String text);
-
     void changeActivity();
+
+    void setError(Integer type, String texto);
 }

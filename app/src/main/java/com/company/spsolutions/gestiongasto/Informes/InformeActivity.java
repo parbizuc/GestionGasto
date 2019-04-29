@@ -2,6 +2,8 @@ package com.company.spsolutions.gestiongasto.Informes;
 /**
  * Created by coralRodriguez on 27/03/19.
  */
+
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,9 +18,9 @@ import com.company.spsolutions.gestiongasto.SolicitudGasto.FragmentSolicitudes;
 
 public class InformeActivity extends AppCompatActivity implements PresenterInforme {
     /* Esta clase controla la vista principal del informe de gastos
-    * initComponents() se encarga de crear las instancias de los view y sus listeners
-    * onClick es el metodo que se encarga de gestionar las acciones al dar click en los view
-    *
+     * initComponents() se encarga de crear las instancias de los view y sus listeners
+     * onClick es el metodo que se encarga de gestionar las acciones al dar click en los view
+     *
      */
     private FragmentInformes.SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -31,7 +33,8 @@ public class InformeActivity extends AppCompatActivity implements PresenterInfor
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Mandar a agregar un informe", Toast.LENGTH_SHORT).show();
+                Intent addi = new Intent(InformeActivity.this, AddInformeActivity.class);
+                startActivity(addi);
 
             }
         });
@@ -45,8 +48,30 @@ public class InformeActivity extends AppCompatActivity implements PresenterInfor
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
     }
+
     /*
-    * Mandar al activity para agregar un informe
+     * Mandar al activity para agregar un informe
      */
-    public void addInforme(){}
+    public void addInforme() {
+    }
+
+    @Override
+    public String getTotal() {
+        return null;
+    }
+
+    @Override
+    public void changeTotal(String total) {
+
+    }
+
+    @Override
+    public void setError(Integer type, String texto) {
+
+    }
+
+    @Override
+    public void changeActivity() {
+
+    }
 }

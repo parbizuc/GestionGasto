@@ -1,6 +1,7 @@
 package com.company.spsolutions.gestiongasto.Login;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -49,6 +50,7 @@ public class PresenterLoginImpl {
         auth = service.getAuth();
         if (validate(user, password)) {
             authentication(user, password);
+            delegate.signIn();
         } else {
             completeAuth(null, null);
             return;
@@ -87,12 +89,32 @@ public class PresenterLoginImpl {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Map datos = document.getData();
                         Empresa.init(datos.get("id").toString(), datos.get("nombre").toString(), datos.get("moneda").toString(), datos.get("prefijoPais").toString());
+                        savePreferences();
                     }
                 } else {
                     Log.d("ERROR", "Error getting documents: ", task.getException());
                 }
             }
         });
+    }
+
+    private void savePreferences() {
+        SharedPreferences userSP = context.getSharedPreferences("userdetails", Context.MODE_PRIVATE);
+        SharedPreferences companySP = context.getSharedPreferences("companydetails", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editorU = userSP.edit();
+        SharedPreferences.Editor editorE = companySP.edit();
+        editorU.putString("idU", Usuario.getInstance().getId());
+        editorU.putString("nombreU", Usuario.getInstance().getNombre());
+        editorU.putString("idE", Usuario.getInstance().getIdEmpresa());
+        editorU.putString("nombreE", Usuario.getInstance().getNombreEmpresa());
+        editorU.putString("rol", Usuario.getInstance().getRol());
+        editorU.putString("pais", Usuario.getInstance().getPais());
+        editorU.commit();
+        editorE.putString("id", Empresa.getInstance().getId());
+        editorE.putString("nombre", Empresa.getInstance().getNombre());
+        editorE.putString("moneda", Empresa.getInstance().getMoneda());
+        editorE.putString("pais", Empresa.getInstance().getPrefijoPais());
+        editorE.commit();
     }
 
     private void authentication(String email, String password) {
@@ -130,7 +152,6 @@ public class PresenterLoginImpl {
      * 1. Si el login fue exitoso se le notifica a la vista que mande a cargar y a la siguiente activity
      */
     public void onSuccess(String id) {
-        delegate.displayLoader(false);
         FirebaseUser user = auth.getCurrentUser();
         completeAuth(user, id);
     }
@@ -140,7 +161,7 @@ public class PresenterLoginImpl {
      */
     public void onError() {
         delegate.displaySigninError("Ocurrio un error");
-        delegate.displayLoader(true);
+        delegate.failSignIn();
         completeAuth(null, null);
     }
 

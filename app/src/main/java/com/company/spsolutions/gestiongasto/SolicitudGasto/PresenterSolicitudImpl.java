@@ -43,7 +43,7 @@ public class PresenterSolicitudImpl {
     }
 
     public void sendData(String fechaInicio, String fechaFin, String descripcion, String centro, String motivo, String moneda, String importe, String fechaRegistro, String fechaEnviado, String estado, String nombreUsuario, String idUsuario, String idEmpresa, String pais) {
-        if (validarCampos(fechaInicio, fechaFin, descripcion, centro, importe, motivo)) {
+        if (validarCampos(fechaInicio, fechaFin, importe, motivo)) {
             DocumentReference ref = connect().document();
             String idDoc = ref.getId();
             Solicitud solicitud = new Solicitud(fechaInicio, fechaFin, descripcion, centro, motivo, moneda, importe, fechaRegistro, fechaEnviado, estado, null, nombreUsuario, idUsuario, idDoc, idEmpresa, pais);
@@ -55,16 +55,14 @@ public class PresenterSolicitudImpl {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(Exception e) {
-                    delegate.displayLabel("Ocurrio un error");
+                    delegate.setError(4, "Ocurrio un error al querer guardar los datos. Intente más tarde");
                 }
             });
-        } else {
-            delegate.displayLabel("Ocurrio un error, verifica los datos");
         }
     }
 
     public void editData(String fechaInicio, String fechaFin, String descripcion, String centro, String motivo, String importe, String fechaRegistro, String fechaEnviado, String estado, String idSolicitud) {
-        if (validarCampos(fechaInicio, fechaFin, descripcion, centro, importe, motivo)) {
+        if (validarCampos(fechaInicio, fechaFin, importe, motivo)) {
             Map<String, Object> updates = new HashMap<>();
             updates.put("fechaInicio", fechaInicio);
             updates.put("fechaFin", fechaFin);
@@ -83,27 +81,37 @@ public class PresenterSolicitudImpl {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(Exception e) {
-                    delegate.displayLabel("Ocurrio un error");
+                    delegate.setError(4, "Ocurrio un error al querer guardar los datos. Intente más tarde");
                 }
             });
-        } else {
-            delegate.displayLabel("Ocurrio un error, verifica los datos");
         }
     }
 
     public Query getQuery() {
         Query ref;
         if (Usuario.getInstance().getRol().equals("usuario")) {
-            ref =  connect().whereEqualTo("idUsuario",Usuario.getInstance().getId());
-        }else{
+            ref = connect().whereEqualTo("idUsuario", Usuario.getInstance().getId());
+        } else {
             ref = connect().orderBy("idUsuario");
         }
         return ref;
     }
 
-    private Boolean validarCampos(String fechaInicio, String fechaFin, String descripcion, String centro, String importe, String motivo) {
-        if (fechaInicio.equals("") || fechaFin.equals("") || descripcion.equals("") || centro.equals("") || importe.equals("") || motivo.equals("")) {
-            //mensaje informando que falta datos
+    private Boolean validarCampos(String fechaInicio, String fechaFin, String importe, String motivo) {
+        if (fechaInicio.equals("")) {
+            delegate.setError(0, "Este campo es obligatorio");
+            return false;
+        }
+        if (fechaFin.equals("")) {
+            delegate.setError(1, "Este campo es obligatorio");
+            return false;
+        }
+        if (motivo.equals("")) {
+            delegate.setError(2, "Este campo es obligatorio");
+            return false;
+        }
+        if (importe.equals("")) {
+            delegate.setError(3, "Este campo es obligatorio");
             return false;
         }
         return true;

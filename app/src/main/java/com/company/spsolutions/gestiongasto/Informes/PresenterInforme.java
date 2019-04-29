@@ -7,7 +7,12 @@ public interface PresenterInforme {
     /*
      * Delegado entre el presenter y la vista
      */
-    public interface ResumenGastos {
+    String getTotal();
+    void changeTotal(String total);
+    void setError(Integer type,String message);
+    void changeActivity();
+
+    interface ResumenGastos {
         void showPopUp();
     }
 }

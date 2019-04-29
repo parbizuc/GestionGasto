@@ -3,12 +3,14 @@ package com.company.spsolutions.gestiongasto.Login;
  * Created by coralRodriguez on 27/03/19.
  */
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.company.spsolutions.gestiongasto.MenuPrincipal.MainActivity;
 import com.company.spsolutions.gestiongasto.R;
@@ -32,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements PresenterLogin {
     EditText passwordET;
     Button loginBNT;
     PresenterLoginImpl presenter;
+    ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements PresenterLogin {
     */
     public void initComponents() {
         presenter = new PresenterLoginImpl(this, this);
+        mProgress = new ProgressDialog(this);
         loginBNT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +89,32 @@ public class LoginActivity extends AppCompatActivity implements PresenterLogin {
 
     @Override
     public void successLogin() {
+        mProgress.dismiss();
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
+    }
+
+
+
+    @Override
+    public void signIn() {
+        mProgress.setTitle("Login");
+        mProgress.setMessage("Por favor espere");
+        mProgress.setCancelable(false);
+        mProgress.setIndeterminate(true);
+        mProgress.show();
+    }
+
+    @Override
+    public void failSignIn() {
+        mProgress.dismiss();
+    }
+
+    /**
+     * Sobreescritura del método para que no se pueda acceder al MainActivity sin el login antes.
+     */
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }
