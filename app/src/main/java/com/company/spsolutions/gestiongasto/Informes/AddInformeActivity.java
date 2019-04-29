@@ -1,6 +1,7 @@
 package com.company.spsolutions.gestiongasto.Informes;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -170,14 +172,22 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
                 showDataPicker(fechaIniET);
             }
         });
-
         ffinIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDataPicker(fechaFinET);
             }
         });
-
+        notasET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (notasET.isFocused()) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    notasET.clearFocus();
+                }
+            }
+        });
         guardarBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
