@@ -66,7 +66,7 @@ public class InformeActivity extends AppCompatActivity implements PresenterInfor
     }
 
     @Override
-    public void displayLabel(String message) {
+    public void setError(Integer type, String texto) {
 
     }
 

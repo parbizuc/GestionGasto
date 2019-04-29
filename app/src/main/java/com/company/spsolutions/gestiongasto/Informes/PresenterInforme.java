@@ -9,7 +9,7 @@ public interface PresenterInforme {
      */
     String getTotal();
     void changeTotal(String total);
-    void displayLabel (String message);
+    void setError(Integer type,String message);
     void changeActivity();
 
     interface ResumenGastos {

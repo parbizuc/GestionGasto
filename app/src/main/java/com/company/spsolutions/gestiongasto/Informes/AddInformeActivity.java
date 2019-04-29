@@ -52,7 +52,7 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
     List<Gasto> gastos = new ArrayList<>();
     List<Solicitud> solicitudes = new ArrayList<>();
     EditText fechaIniET, fechaFinET, tituloET, notasET;
-    TextView totalTV, empresaTV;
+    TextView totalTV, empresaTV, rolTV, usuarioTV, textGTV;
     Button guardarBTN, enviarBTN;
     PresenterInformeImpl presenter;
     ImageButton finiIB, ffinIB;
@@ -87,6 +87,9 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         finiIB = findViewById(R.id.fechaIniai_ib);
         ffinIB = findViewById(R.id.fechaFinai_ib);
         totalTV = findViewById(R.id.totalai_tv);
+        rolTV = findViewById(R.id.rolai_tv);
+        textGTV = findViewById(R.id.textgastos_TV);
+        usuarioTV = findViewById(R.id.usuarioai_tv);
         empresaTV = findViewById(R.id.empresaai_tv);
         adelantoSP = findViewById(R.id.adelantoai_sp);
         recyclerGastos = findViewById(R.id.listagai_rv);
@@ -110,6 +113,8 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
             }
         });
         empresaTV.setText(Empresa.getInstance().getNombre());
+        usuarioTV.setText(Usuario.getInstance().getNombre());
+        rolTV.setText(Usuario.getInstance().getRol());
     }
 
     private void getDatos() {
@@ -145,6 +150,20 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
     }
 
     public void setListeners() {
+        fechaIniET.setFocusable(false);
+        fechaFinET.setFocusable(false);
+        fechaFinET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker(fechaFinET);
+            }
+        });
+        fechaIniET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker(fechaIniET);
+            }
+        });
         finiIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,15 +244,34 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
     }
 
     @Override
-    public void displayLabel(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddInformeActivity.this);
-        builder.setMessage(message).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //algo
-            }
-        });
-        builder.show();
+    public void setError(Integer type, String texto) {
+        switch (type) {
+            case 0:
+                fechaIniET.setError(texto);
+                break;
+            case 1:
+                fechaFinET.setError(texto);
+                break;
+            case 2:
+                tituloET.setError(texto);
+                break;
+            case 3:
+                textGTV.setError(texto);
+                break;
+            case 4:
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddInformeActivity.this);
+                builder.setMessage(texto).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //algo
+                    }
+                });
+                builder.show();
+                break;
+            default:
+                break;
+        }
     }
+
 
     @Override
     public void changeActivity() {

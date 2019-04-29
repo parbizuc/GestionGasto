@@ -103,7 +103,7 @@ public class PresenterInformeImpl {
      * Lógica para agregar un informe y mandar a guardarlo en firebase utulizando informeService
      */
     public void addInforme(String titulo, String fechaInicio, String fechaFin, String comentario, String monto, String fechaRegistro, String fechaEnviado, String estado, Solicitud solicitud, List<Gasto> gastos) {
-        if (validarCampos(fechaInicio, fechaFin, comentario, monto)) {
+        if (validarCampos(fechaInicio, fechaFin, gastos, titulo)) {
             Empresa empresa = Empresa.getInstance();
             Usuario usuario = Usuario.getInstance();
             DocumentReference refI = connectInforme().document();
@@ -126,18 +126,28 @@ public class PresenterInformeImpl {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(Exception e) {
-                    delegate.displayLabel("Ocurrio un error");
+                    delegate.setError(6, "Ocurrio un error");
                 }
             });
-        } else {
-            delegate.displayLabel("Ocurrio un error, verifica los datos");
         }
     }
 
 
-    private Boolean validarCampos(String fechaInicio, String fechaFin, String comentario, String monto) {
-        if (fechaInicio.equals("") || fechaFin.equals("") || comentario.equals("") || monto.equals("")) {
-            //mensaje informando que falta datos
+    private Boolean validarCampos(String fechaInicio, String fechaFin, List<Gasto> gastos, String titulo) {
+        if (fechaInicio.equals("")) {
+            delegate.setError(0, "Este campo es obligatorio");
+            return false;
+        }
+        if (fechaFin.equals("")) {
+            delegate.setError(1, "Este campo es obligatorio");
+            return false;
+        }
+        if (titulo.equals("")) {
+            delegate.setError(2, "Este campo es obligatorio");
+            return false;
+        }
+        if (gastos.isEmpty()) {
+            delegate.setError(3, "Seleccione al menos un gasto");
             return false;
         }
         return true;

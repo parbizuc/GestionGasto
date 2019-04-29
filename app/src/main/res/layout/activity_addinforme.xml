@@ -46,6 +46,32 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3351606F">
+
+        <TextView
+            android:id="@+id/usuarioai_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="5dp"
+            android:text="Juan Perez"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/rolai_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:text="usuario"
+            android:textColor="@color/azulApp" />
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -77,7 +103,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:gravity="center"
                         android:hint="Título" />
                 </LinearLayout>
 
@@ -89,7 +114,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Adelanto Relacionado"
+                        android:text="Anticipo Relacionado"
                         android:textSize="18sp" />
 
                     <Spinner
@@ -158,9 +183,10 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textgastos_TV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gastos relacionados"
+                        android:text="Seleccionar los gastos relacionados"
                         android:textSize="18sp" />
 
                     <android.support.v7.widget.RecyclerView

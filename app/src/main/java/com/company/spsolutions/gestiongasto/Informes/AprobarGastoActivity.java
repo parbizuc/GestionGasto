@@ -39,11 +39,12 @@ public class AprobarGastoActivity extends AppCompatActivity implements Presenter
     }
 
     /*
-    * Lanzar popup para informar el motivo del rechazo
-    * Obtener y guardar los datos del motivo
-    * Logica de los botones del popup
+     * Lanzar popup para informar el motivo del rechazo
+     * Obtener y guardar los datos del motivo
+     * Logica de los botones del popup
      */
-    public void showPopUp(){}
+    public void showPopUp() {
+    }
 
     @Override
     public String getTotal() {
@@ -56,7 +57,7 @@ public class AprobarGastoActivity extends AppCompatActivity implements Presenter
     }
 
     @Override
-    public void displayLabel(String message) {
+    public void setError(Integer type, String texto) {
 
     }
 
