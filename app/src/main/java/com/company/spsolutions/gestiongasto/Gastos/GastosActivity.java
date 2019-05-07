@@ -3,6 +3,7 @@ package com.company.spsolutions.gestiongasto.Gastos;
  * Created by coralRodriguez on 28/03/19.
  */
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;;
 import android.support.v4.view.ViewPager;
@@ -12,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.company.spsolutions.gestiongasto.R;
 import com.company.spsolutions.gestiongasto.SolicitudGasto.FragmentSolicitudes;
@@ -34,8 +34,7 @@ public class GastosActivity extends AppCompatActivity implements PresenterGastos
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Mandar a agregar un gasto", Toast.LENGTH_SHORT).show();
-
+                agregarGasto();
             }
         });
         Toolbar toolbar = findViewById(R.id.toolbarGastos);
@@ -55,7 +54,8 @@ public class GastosActivity extends AppCompatActivity implements PresenterGastos
      * 1. Agregar intent
      */
     public void agregarGasto() {
-
+        Intent addgasto = new Intent(GastosActivity.this, AddGastoActivity.class);
+        startActivity(addgasto);
     }
 
     /*
@@ -76,7 +76,22 @@ public class GastosActivity extends AppCompatActivity implements PresenterGastos
 
 
     @Override
-    public void displayError() {
+    public void displayTicketResults(String amount, String date) {
+
+    }
+
+    @Override
+    public void changeActivity() {
+
+    }
+
+    @Override
+    public void setError(Integer type, String text) {
+
+    }
+
+    @Override
+    public void displayProgress(Boolean isDisplayed, String texto) {
 
     }
 

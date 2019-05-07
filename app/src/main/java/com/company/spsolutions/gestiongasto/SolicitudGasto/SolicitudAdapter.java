@@ -37,11 +37,13 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
         registroHolder.descripcionTV.setText(itemSolicitud.getDescripcion());
         registroHolder.fechaTV.setText(itemSolicitud.getFechaInicio());
         registroHolder.dineroTV.setText("$" + itemSolicitud.getImporte());
+        registroHolder.labelSolicitudTV.setText(itemSolicitud.getEstado());
+        /*
         if ((itemSolicitud.getEstado() == null)) {
             registroHolder.labelSolicitudTV.setVisibility(View.GONE);
         } else {
             registroHolder.labelSolicitudTV.setText(itemSolicitud.getEstado());
-        }
+        }*/
         registroHolder.registroCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

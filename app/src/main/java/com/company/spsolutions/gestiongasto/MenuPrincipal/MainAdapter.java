@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.company.spsolutions.gestiongasto.Gastos.GastosActivity;
 import com.company.spsolutions.gestiongasto.Informes.InformeActivity;
 import com.company.spsolutions.gestiongasto.R;
 import com.company.spsolutions.gestiongasto.SolicitudGasto.SolicitudActivity;
@@ -46,6 +47,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
                     case 0:
                         Intent sActivity = new Intent(contexto, SolicitudActivity.class);
                         contexto.startActivity(sActivity);
+                        break;
+                    case 1:
+                        Intent gActivity = new Intent(contexto, GastosActivity.class);
+                        contexto.startActivity(gActivity);
                         break;
                     case 2:
                         Intent iActivity = new Intent(contexto, InformeActivity.class);

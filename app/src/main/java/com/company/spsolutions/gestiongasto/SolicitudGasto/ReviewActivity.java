@@ -44,6 +44,10 @@ public class ReviewActivity extends AppCompatActivity {
             estatusTV.setText(solicitud.getEstado());
             fechaIniTV.setText(solicitud.getFechaInicio());
             fechaFinTV.setText(solicitud.getFechaFin());
+        } else if (usuario.getRol().equals("aprobador")) {
+            estatusTV.setText(solicitud.getEstado());
+            fechaIniTV.setText(solicitud.getFechaInicio());
+            fechaFinTV.setText(solicitud.getFechaFin());
         } else {
             fechaIniTV.setVisibility(View.GONE);
             fechaFinTV.setVisibility(View.GONE);

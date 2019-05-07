@@ -4,4 +4,10 @@
         <item>MX</item>
         <item>US</item>
     </string-array>
+    <string-array name="frecuencia_array">
+        <item>Seleccione la frecuencia del cargo</item>
+        <item>SEMANAL</item>
+        <item>MENSUAL</item>
+        <item>ANUAL</item>
+    </string-array>
 </resources>

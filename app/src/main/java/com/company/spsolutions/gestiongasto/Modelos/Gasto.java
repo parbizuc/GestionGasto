@@ -12,7 +12,6 @@ public class Gasto {
     String montoGasto;
     String nombreEmpresa;
     String nombreProveedor;
-    String ticket;
     String imagen;
     String idAnticipo;
     String montoAnticipo;
@@ -28,7 +27,7 @@ public class Gasto {
 
     }
 
-    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor, String ticket) {
+    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor) {
         this.estado = estado;
         this.fechaGasto = fechaGasto;
         this.id = id;
@@ -37,10 +36,9 @@ public class Gasto {
         this.montoGasto = montoGasto;
         this.nombreEmpresa = nombreEmpresa;
         this.nombreProveedor = nombreProveedor;
-        this.ticket = ticket;
     }
 
-    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor, String ticket, String imagen, String idAnticipo, String montoAnticipo, String monedaAnticipo, String categoria, String comentario, String idUsuario, String nombreUsuario, Boolean esRecurrente, String periodoRecurrente) {
+    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor, String imagen, String idAnticipo, String montoAnticipo, String monedaAnticipo, String categoria, String comentario, String idUsuario, String nombreUsuario, Boolean esRecurrente, String periodoRecurrente) {
         this.estado = estado;
         this.fechaGasto = fechaGasto;
         this.id = id;
@@ -49,7 +47,6 @@ public class Gasto {
         this.montoGasto = montoGasto;
         this.nombreEmpresa = nombreEmpresa;
         this.nombreProveedor = nombreProveedor;
-        this.ticket = ticket;
         this.imagen = imagen;
         this.idAnticipo = idAnticipo;
         this.montoAnticipo = montoAnticipo;
@@ -204,14 +201,6 @@ public class Gasto {
 
     public void setNombreProveedor(String nombreProveedor) {
         this.nombreProveedor = nombreProveedor;
-    }
-
-    public String getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(String ticket) {
-        this.ticket = ticket;
     }
 }
 

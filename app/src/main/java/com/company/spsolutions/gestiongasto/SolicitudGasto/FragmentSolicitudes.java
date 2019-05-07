@@ -59,26 +59,50 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
     }
 
     private void setListeners() {
-        presenter.getQuery().addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                datosProcesados.clear();
-                datosRegistrados.clear();
-                for (DocumentSnapshot document : snapshots.getDocuments()) {
-                    Solicitud solicitud = document.toObject(Solicitud.class);
-                            if (solicitud.getEstado() != null) {
-                                datosProcesados.add(solicitud);
-                            } else {
-                                datosRegistrados.add(solicitud);
-                            }
+        if (presenter.getValorEstado() == true) {
+            presenter.getQuery().addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                    datosProcesados.clear();
+                    datosRegistrados.clear();
+                    for (DocumentSnapshot document : snapshots.getDocuments()) {
+                        Solicitud solicitud = document.toObject(Solicitud.class);
+                        if (solicitud.getEstado() != null) {
+                            datosProcesados.add(solicitud);
+                        } else {
+                            datosRegistrados.add(solicitud);
                         }
-                datos = getArguments().getInt(SECTION_NUMBER) == 1 ? datosRegistrados : datosProcesados;
-                sAdapter.refreshSolicitudes(datos);
-                recyclerSolicitud.setAdapter(sAdapter);
-                sAdapter.notifyDataSetChanged();
-            }
-        });
+                    }
+                    datos = getArguments().getInt(SECTION_NUMBER) == 1 ? datosRegistrados : datosProcesados;
+                    sAdapter.refreshSolicitudes(datos);
+                    recyclerSolicitud.setAdapter(sAdapter);
+                    sAdapter.notifyDataSetChanged();
+                }
+            });
+        } else if (presenter.getValorEstado() == false) {
 
+            presenter.getQuery().addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                    datosProcesados.clear();
+                    datosRegistrados.clear();
+
+                    for (DocumentSnapshot document : snapshots.getDocuments()) {
+                        Solicitud solicitud = document.toObject(Solicitud.class);
+                        if (solicitud.getEstado() != null && solicitud.getEstado().equals("Por aprobar")) {
+                            datosRegistrados.add(solicitud);
+
+                        } else if (solicitud.getEstado() != null && solicitud.getEstado().equals("APROBADO")) /*&& solicitud.getEstado().equals("Rechazado")se agrega de acuerdo a como se escriba en la base de datos */ {
+                            datosProcesados.add(solicitud);
+                        }
+                    }
+                    datos = getArguments().getInt(SECTION_NUMBER) == 1 ? datosRegistrados : datosProcesados;
+                    sAdapter.refreshSolicitudes(datos);
+                    recyclerSolicitud.setAdapter(sAdapter);
+                    sAdapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     @Override

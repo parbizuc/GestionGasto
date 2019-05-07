@@ -3,6 +3,7 @@ package com.company.spsolutions.gestiongasto.Informes;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -130,6 +132,8 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
                 }
                 iAdapter = new AdapterAddInforme(gastos, getApplicationContext(), presenter);
                 recyclerGastos.setAdapter(iAdapter);
+                ViewCompat.setNestedScrollingEnabled(recyclerGastos, false);
+
             }
         });
         presenter.searchAdelantos().addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -141,7 +145,7 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
                     solicitudes.add(motivo);
                 }
                 solicitudes.add(0, new Solicitud());
-                solicitudes.get(0).setMotivo("Selecciona el adelanto relacionado");
+                solicitudes.get(0).setMotivo("Sin Anticipo");
                 adaptersp = new ArrayAdapter<Solicitud>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, solicitudes);
                 adaptersp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 adelantoSP.setGravity(View.TEXT_ALIGNMENT_CENTER);
@@ -226,8 +230,9 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         String titulo = tituloET.getText().toString();
         String monto = totalTV.getText().toString();
         Solicitud adelanto = null;
-        if (adelantoSP.getSelectedItemPosition() != 0)
+        if (adelantoSP.getSelectedItemPosition() != 0) {
             adelanto = (Solicitud) adelantoSP.getSelectedItem();
+        }
         String nota = notasET.getText().toString();
         if (isEnviada)
             presenter.addInforme(titulo, fi, ff, nota, monto, null, getDate(), "ENVIADO", adelanto, iAdapter.getItemsSelect());

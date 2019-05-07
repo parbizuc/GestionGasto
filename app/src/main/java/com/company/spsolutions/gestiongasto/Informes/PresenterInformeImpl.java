@@ -108,7 +108,12 @@ public class PresenterInformeImpl {
             Usuario usuario = Usuario.getInstance();
             DocumentReference refI = connectInforme().document();
             String idInfo = refI.getId();
-            Informe informe = new Informe(idInfo, empresa.getId(), empresa.getNombre(), titulo, solicitud.getId(), fechaInicio, fechaFin, comentario, monto, empresa.getMoneda(), usuario.getId(), usuario.getNombre(), fechaRegistro, fechaEnviado, estado);
+            Informe informe;
+            if (solicitud == null) {
+                informe = new Informe(idInfo, empresa.getId(), empresa.getNombre(), titulo, null, fechaInicio, fechaFin, comentario, monto, empresa.getMoneda(), usuario.getId(), usuario.getNombre(), fechaRegistro, fechaEnviado, estado);
+            } else {
+                informe = new Informe(idInfo, empresa.getId(), empresa.getNombre(), titulo, solicitud.getId(), fechaInicio, fechaFin, comentario, monto, empresa.getMoneda(), usuario.getId(), usuario.getNombre(), fechaRegistro, fechaEnviado, estado);
+            }
             for (Gasto gasto : gastos) {
                 DocumentReference refGI = connectGastosInf().document();
                 String idGI = refGI.getId();

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.company.spsolutions.gestiongasto"
-        minSdkVersion 16
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -34,5 +34,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-firestore:18.2.0'
     implementation 'com.google.firebase:firebase-auth:16.2.1'
+    implementation 'com.google.firebase:firebase-storage:16.1.0'
+    // AWS
+    implementation 'com.amazonaws:aws-android-sdk-rekognition:2.13.+'
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.13.+'
+    implementation 'com.amazonaws:aws-android-sdk-auth-userpools:2.13.+'
+    implementation 'com.amazonaws:aws-android-sdk-auth-ui:2.13.+'
 }
 apply plugin: 'com.google.gms.google-services'

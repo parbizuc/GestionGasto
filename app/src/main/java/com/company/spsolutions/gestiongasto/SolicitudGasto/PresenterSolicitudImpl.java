@@ -97,6 +97,18 @@ public class PresenterSolicitudImpl {
         return ref;
     }
 
+    public boolean getValorEstado() {
+        boolean ref;
+        if (Usuario.getInstance().getRol().equals("usuario")) {
+            ref = true;
+        } else if (Usuario.getInstance().getRol().equals("aprobador")) {
+            ref = false;
+        } else {
+            ref = true;
+        }
+        return ref;
+    }
+
     private Boolean validarCampos(String fechaInicio, String fechaFin, String importe, String motivo) {
         if (fechaInicio.equals("")) {
             delegate.setError(0, "Este campo es obligatorio");
