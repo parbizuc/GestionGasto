@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.rekognition.AmazonRekognition;
@@ -128,14 +129,17 @@ public class PresenterGastosImpl {
         ArrayList<String> array_amount = new ArrayList<String>();
         String[] text_used = {"total", "importe", "mxn", "m.n"};
         String amount = "";
+        //System.out.println(texto);
         for (int i = 0; i < texto.size(); i++) {
             String str = texto.get(i).toLowerCase();
             // Busca Fecha en ticket
-            String pattern_date = "((([0-9]{2}|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|ene|feb|abr|ago|dic|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|diciembre))(\\/|-|\\.)(([0-9]{2}|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|ene|feb|abr|ago|dic|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|diciembre))|)(\\/|-|\\.)[0-9]{4})|([0-9]{4}(\\/|-|\\.)[0-9]{2}(\\/|-|\\.)[0-9]{2}))";
+            String pattern_date = "(([0-9]{2}|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|ene|feb|abr|ago|dic|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|diciembre)|[0-9]{4})(\\/|-|\\s|\\.)([0-9]{2}|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|ene|feb|abr|ago|dic|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|diciembre))(\\/|-|\\s|\\.)([0-9]{4}|[0-9]{2}))";
             Pattern pat_date = Pattern.compile(pattern_date);
             Matcher match_date = pat_date.matcher(str);
             Boolean date_found = match_date.find();
             if (date_found.equals(true)) {
+                //System.out.println("fecha encontrada: "+texto.get(i).toLowerCase().substring
+                // (match_date.start(),match_date.end()));
                 array_date.add(texto.get(i).toLowerCase().substring(match_date.start(), match_date.end()));
             }
             // Busca monto en ticket
@@ -155,34 +159,41 @@ public class PresenterGastosImpl {
         }
         if (array_date.size() > 0) {
             if (array_amount.size() > 0) {
-                if (amount != "") {
+                /*if (amount != "") {
+                    //System.out.println("mando a monto vacio: "+ amount +" fecha: "+array_date
+                    // .get(0));
                     delegate.displayTicketResults(amount, array_date.get(0));
-                } else {
+                } else {*/
                     Double iMayor = 0.0;
                     for (int h = 0; h < array_amount.size(); h++) {
-                        if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$-+.^:,]", "")) > iMayor) {
-                            iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$-+.^:,]", ""));
+                        if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", "")) > iMayor) {
+                            iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", ""));
                         }
                     }
+                    //System.out.println("mando a monto: "+ iMayor +" fecha: "+array_date.get(0));
                     delegate.displayTicketResults(Double.toString(iMayor), array_date.get(0));
-                }
+                //}
             } else {
+                //System.out.println("no encontro monto pero si fecha: "+array_date.get(0));
                 delegate.displayTicketResults("", array_date.get(0));
             }
         } else {
-            if (array_amount.size() > 0) {
+            if (array_amount.size() > 0) {/*
                 if (amount != "") {
+                    //System.out.println("no encontro fecha solo monto: "+amount);
                     delegate.displayTicketResults(amount, "");
-                } else {
+                } else {*/
                     Double iMayor = 0.0;
                     for (int h = 0; h < array_amount.size(); h++) {
-                        if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$-+.^:,]", "")) > iMayor) {
-                            iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$-+^:]", ""));
+                        if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", "")) > iMayor) {
+                            iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", ""));
                         }
                     }
+                    //System.out.println("no encontro fecha solo monto: "+iMayor);
                     delegate.displayTicketResults(Double.toString(iMayor), "");
-                }
+                //}
             } else {
+                //System.out.println("no encontro nada");
                 delegate.displayTicketResults("", "");
             }
         }
@@ -229,18 +240,18 @@ public class PresenterGastosImpl {
             ref.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    System.out.println("Imagen en Firebase");
+                    //System.out.println("Imagen en Firebase");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    System.out.println("Imagen fallo en carga a Firebase");
+                    //System.out.println("Imagen fallo en carga a Firebase");
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    System.out.println("Uploaded " + (int) progress + "%");
+                    //System.out.println("Uploaded " + (int) progress + "%");
                 }
             });
         }

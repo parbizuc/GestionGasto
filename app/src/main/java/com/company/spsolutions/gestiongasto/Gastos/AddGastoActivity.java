@@ -185,6 +185,12 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
      */
 
     public void setListeners() {
+        fechaIB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDataPicker();
+            }
+        });
         pictureBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,14 +209,7 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
                 }
             }
         });
-
         fechaReciboET.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDataPicker();
-            }
-        });
-        fechaIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDataPicker();
@@ -312,7 +311,8 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
     public void displayTicketResults(String amount, String date) {
         if (!amount.equals("")) {
             importeET.setText(amount);
-        } else if (!date.equals("")) {
+        }
+        if (!date.equals("")) {
             fechaReciboET.setText(date);
         }
         wProgress.dismiss();
