@@ -144,6 +144,7 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
         String diaFormateado = (dia < 10) ? "0" + String.valueOf(dia) : String.valueOf(dia);
         String mesFormateado = (mesA < 10) ? "0" + String.valueOf(mesA) : String.valueOf(mesA);
         fechaReciboET.setText(diaFormateado + "/" + mesFormateado + "/" + anio);
+        fechaG = anio + "-" + mesFormateado + "-" + diaFormateado;
     }
 
     private void getDatos() {
