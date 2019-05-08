@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.rekognition.AmazonRekognition;
@@ -19,12 +18,14 @@ import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.company.spsolutions.gestiongasto.SolicitudGasto.SolicitudService;
 import com.google.android.gms.common.util.IOUtils;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -36,11 +37,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by coralRodriguez on 28/03/19.
@@ -56,7 +54,6 @@ public class PresenterGastosImpl {
     GastoService gastoService;
     File file;
     ArrayList<String> texto = new ArrayList<String>();
-    String reference_path;
 
     public PresenterGastosImpl(Context context, PresenterGastos delegate) {
         this.context = context;
@@ -93,7 +90,6 @@ public class PresenterGastosImpl {
         }
         return ref;
     }
-
 
     public static File getOutputMediaFile() {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "XRendir");
@@ -164,14 +160,14 @@ public class PresenterGastosImpl {
                     // .get(0));
                     delegate.displayTicketResults(amount, array_date.get(0));
                 } else {*/
-                    Double iMayor = 0.0;
-                    for (int h = 0; h < array_amount.size(); h++) {
-                        if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", "")) > iMayor) {
-                            iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", ""));
-                        }
+                Double iMayor = 0.0;
+                for (int h = 0; h < array_amount.size(); h++) {
+                    if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", "")) > iMayor) {
+                        iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", ""));
                     }
-                    //System.out.println("mando a monto: "+ iMayor +" fecha: "+array_date.get(0));
-                    delegate.displayTicketResults(Double.toString(iMayor), array_date.get(0));
+                }
+                //System.out.println("mando a monto: "+ iMayor +" fecha: "+array_date.get(0));
+                delegate.displayTicketResults(Double.toString(iMayor), array_date.get(0));
                 //}
             } else {
                 //System.out.println("no encontro monto pero si fecha: "+array_date.get(0));
@@ -183,14 +179,14 @@ public class PresenterGastosImpl {
                     //System.out.println("no encontro fecha solo monto: "+amount);
                     delegate.displayTicketResults(amount, "");
                 } else {*/
-                    Double iMayor = 0.0;
-                    for (int h = 0; h < array_amount.size(); h++) {
-                        if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", "")) > iMayor) {
-                            iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", ""));
-                        }
+                Double iMayor = 0.0;
+                for (int h = 0; h < array_amount.size(); h++) {
+                    if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", "")) > iMayor) {
+                        iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", ""));
                     }
-                    //System.out.println("no encontro fecha solo monto: "+iMayor);
-                    delegate.displayTicketResults(Double.toString(iMayor), "");
+                }
+                //System.out.println("no encontro fecha solo monto: "+iMayor);
+                delegate.displayTicketResults(Double.toString(iMayor), "");
                 //}
             } else {
                 //System.out.println("no encontro nada");
@@ -208,53 +204,49 @@ public class PresenterGastosImpl {
         final Empresa empresa = Empresa.getInstance();
         final Usuario usuario = Usuario.getInstance();
         if (validate(fechaG, nombreP, montoG, categoria, filePath, esRecurrente, periodo)) {
-            DocumentReference ref = connectGastosDB().document();
-            String idDoc = ref.getId();
-            saveFirebase(filePath, idDoc);
-            Gasto gasto;
-            if (anticipo != null) {
-                gasto = new Gasto(estado, fechaG, idDoc, empresa.getId(), moneda, montoG, empresa.getNombre(), nombreP, reference_path, anticipo.getId(), anticipo.getImporte(), anticipo.getMoneda(), categoria, comentario, usuario.getId(), usuario.getNombre(), esRecurrente, periodo);
-            } else {
-                gasto = new Gasto(estado, fechaG, idDoc, empresa.getId(), moneda, montoG, empresa.getNombre(), nombreP, reference_path, "", "", "", categoria, comentario, usuario.getId(), usuario.getNombre(), esRecurrente, periodo);
-            }
-            ref.set(gasto).addOnSuccessListener(new OnSuccessListener<Void>() {
+            delegate.displayProgress(true, "Guardando");
+            final StorageReference fotoRef = connectStorage().child("Fotos").child(Usuario.getInstance().getId()).child(filePath.getLastPathSegment());
+            fotoRef.putFile(filePath).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onSuccess(Void aVoid) {
-                    delegate.changeActivity();
+                public Task<Uri> then(Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw new Exception();
+                    }
+
+                    return fotoRef.getDownloadUrl();
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
-                public void onFailure(Exception e) {
-                    delegate.displayProgress(false, "");
-                    delegate.setError(6, "Ocurrio un error al querer guardar los datos. Intente más tarde");
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadLink = task.getResult();
+                        DocumentReference ref = connectGastosDB().document();
+                        String idDoc = ref.getId();
+                        Gasto gasto;
+                        if (anticipo != null) {
+                            gasto = new Gasto(estado, fechaG, idDoc, empresa.getId(), moneda, montoG, empresa.getNombre(), nombreP, downloadLink.toString(), anticipo.getId(), anticipo.getImporte(), anticipo.getMoneda(), categoria, comentario, usuario.getId(), usuario.getNombre(), esRecurrente, periodo);
+                        } else {
+                            gasto = new Gasto(estado, fechaG, idDoc, empresa.getId(), moneda, montoG, empresa.getNombre(), nombreP, downloadLink.toString(), "", "", "", categoria, comentario, usuario.getId(), usuario.getNombre(), esRecurrente, periodo);
+                        }
+                        ref.set(gasto).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                delegate.changeActivity();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(Exception e) {
+                                delegate.displayProgress(false, "");
+                                delegate.setError(6, "Ocurrio un error al querer guardar los datos. Intente más tarde");
+                            }
+                        });
+                    }
                 }
+
+
             });
         }
 
-    }
-
-    private void saveFirebase(Uri file, String idDoc) {
-        if (file != null) {
-            reference_path = "ticket/" + idDoc;
-            StorageReference ref = connectStorage().child(reference_path);
-            ref.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //System.out.println("Imagen en Firebase");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //System.out.println("Imagen fallo en carga a Firebase");
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    //System.out.println("Uploaded " + (int) progress + "%");
-                }
-            });
-        }
     }
 
     private Boolean validate(String fecha, String proveedor, String monto, String categoria, Uri photo, Boolean esRecurrente, String frecuencia) {

@@ -14,11 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.company.spsolutions.gestiongasto.Gastos.GastosActivity;
 import com.company.spsolutions.gestiongasto.Informes.InformeActivity;
 import com.company.spsolutions.gestiongasto.R;
 import com.company.spsolutions.gestiongasto.SolicitudGasto.SolicitudActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CardHolder> {
     @Override
     public void onBindViewHolder(final CardHolder cardHolder, final int i) {
         ItemMenu itemMenu = itemsMenu.get(i);
-        Picasso.get().load(itemMenu.image).into(cardHolder.imageIV);
+        Glide.with(contexto).load(itemMenu.image).into(cardHolder.imageIV);
         cardHolder.titleTV.setText(itemMenu.title);
         cardHolder.cardViewCV.setOnClickListener(new View.OnClickListener() {
             /*Fata controlar el listener segun el rol*/
