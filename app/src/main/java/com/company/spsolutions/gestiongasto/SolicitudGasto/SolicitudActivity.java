@@ -36,7 +36,7 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
     Usuario usuario;
     Empresa empresa;
     TextView usuarioTV, rolTV, empresaTV,tituloTV;
-    String tag= "HOLAAAAAAAAAAAAAAAAAAAAAA";
+
 
 
 
@@ -70,7 +70,7 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
 
         tituloTV.setText("Anticipos");
         usuarioTV.setText(usuario.getNombre());
-        Log.d(tag, usuario.getNombre());
+
         rolTV.setText(usuario.getRol());
         empresaTV.setText(empresa.getNombre());
 
