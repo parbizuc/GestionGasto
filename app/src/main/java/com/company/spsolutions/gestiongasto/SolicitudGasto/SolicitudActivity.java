@@ -7,11 +7,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.company.spsolutions.gestiongasto.Modelos.Empresa;
+import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.company.spsolutions.gestiongasto.R;
 
 /**
@@ -28,6 +32,13 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
     private ViewPager mViewPager;
     private FloatingActionButton addsolicitud_fab;
 
+    //declaracion de variables de la barra agregada
+    Usuario usuario;
+    Empresa empresa;
+    TextView usuarioTV, rolTV, empresaTV,tituloTV;
+    String tag= "HOLAAAAAAAAAAAAAAAAAAAAAA";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +54,26 @@ public class SolicitudActivity extends AppCompatActivity implements PresenterSol
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
         setListeners();
+        initComponents();
+    }
+
+
+    private void initComponents() {
+        usuarioTV = findViewById(R.id.usuarioas_tv);
+        tituloTV = findViewById(R.id.titulo);
+        rolTV = findViewById(R.id.rol_tv);
+        empresaTV = findViewById(R.id.empresa_tv);
+
+
+        usuario = Usuario.getInstance();
+        empresa = Empresa.getInstance();
+
+        tituloTV.setText("Anticipos");
+        usuarioTV.setText(usuario.getNombre());
+        Log.d(tag, usuario.getNombre());
+        rolTV.setText(usuario.getRol());
+        empresaTV.setText(empresa.getNombre());
+
     }
 
     /*

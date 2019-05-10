@@ -43,7 +43,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
      */
     EditText fechaIniET, fechaFinET, motivoET, descripcionET, importeET, centroCostosET;
     Solicitud solicitud;
-    TextView usuarioTV, rolTV, empresaTV;
+    TextView usuarioTV, rolTV, empresaTV,tituloTV;
     Button grabarBTN, enviarBTN;
     Usuario usuario;
     Empresa empresa;
@@ -86,6 +86,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
         importeET = findViewById(R.id.importeas_et);
         centroCostosET = findViewById(R.id.centrocostos_et);
         usuarioTV = findViewById(R.id.usuarioas_tv);
+        tituloTV = findViewById(R.id.titulo);
         rolTV = findViewById(R.id.rol_tv);
         empresaTV = findViewById(R.id.empresa_tv);
         grabarBTN = findViewById(R.id.grabar_btn);
@@ -107,6 +108,7 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
             fi = solicitud.getFechaInicio();
             ff = solicitud.getFechaFin();
         }
+        tituloTV.setText("Nuevo Anticipo");
         usuarioTV.setText(usuario.getNombre());
         rolTV.setText(usuario.getRol());
         empresaTV.setText(empresa.getNombre());
