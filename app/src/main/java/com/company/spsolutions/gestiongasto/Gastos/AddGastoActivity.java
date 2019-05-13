@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -277,11 +278,13 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                Looper.prepare();
                 try {
                     presenter.processImagen(file);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                Looper.loop();
                 return null;
             }
         }.execute();
