@@ -25,19 +25,20 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
                 android:gravity="center"
-                android:text="Nuevo Gasto"
+                android:text="Nombre"
+                android:id="@+id/usuarioag_tv"
                 android:textColor="@android:color/white"
                 android:textSize="20dp" />
 
 
             <TextView
-                android:id="@+id/empresaag_tv"
+                android:id="@+id/rolag_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:layout_marginTop="7dp"
                 android:layout_marginRight="10dp"
-                android:text="spSOLUTIONS"
+                android:text="usuario"
                 android:textColor="@android:color/white"
                 android:textSize="10sp" />
 
@@ -51,23 +52,23 @@
         android:background="#3351606F">
 
         <TextView
-            android:id="@+id/usuarioag_tv"
+            android:id="@+id/tituloTV"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="5dp"
-            android:text="Juan Perez"
+            android:text="Nuevo Gasto"
             android:textColor="@android:color/black"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/rolag_tv"
+            android:id="@+id/empresaag_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
             android:gravity="right"
-            android:text="usuario"
+            android:text="spSOLUTIONS"
             android:textColor="@color/azulApp" />
     </LinearLayout>
 

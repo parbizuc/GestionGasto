@@ -73,7 +73,7 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
     Boolean esRecurrente = false;
     ProgressDialog wProgress;
     PresenterGastosImpl presenter;
-    TextView monedaTV, categoriaTV, frecuenciaTV, contadorTV, rolTV, empresaTV, usuarioTV;
+    TextView monedaTV, categoriaTV, frecuenciaTV, contadorTV, rolTV, empresaTV, usuarioTV, tituloTV;
     EditText importeET, fechaReciboET, proveedorET, comentarioET;
     final Calendar c = Calendar.getInstance();
     final int mes = c.get(Calendar.MONTH);

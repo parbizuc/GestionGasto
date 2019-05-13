@@ -13,7 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.company.spsolutions.gestiongasto.Modelos.Empresa;
+import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.company.spsolutions.gestiongasto.R;
 import com.company.spsolutions.gestiongasto.SolicitudGasto.FragmentSolicitudes;
 
@@ -25,6 +28,11 @@ public class GastosActivity extends AppCompatActivity implements PresenterGastos
 
     private FragmentGastos.SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+
+    //declaracion de variables de la barra agregada
+    Usuario usuario;
+    Empresa empresa;
+    TextView usuarioTV, rolTV, empresaTV,tituloTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +53,27 @@ public class GastosActivity extends AppCompatActivity implements PresenterGastos
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        initComponents();
 
     }
 
+    private void initComponents() {
+        usuarioTV = findViewById(R.id.usuarioas_tv);
+        tituloTV = findViewById(R.id.titulo);
+        rolTV = findViewById(R.id.rol_tv);
+        empresaTV = findViewById(R.id.empresa_tv);
 
+
+        usuario = Usuario.getInstance();
+        empresa = Empresa.getInstance();
+
+        tituloTV.setText("Gastos");
+        usuarioTV.setText(usuario.getNombre());
+
+        rolTV.setText(usuario.getRol());
+        empresaTV.setText(empresa.getNombre());
+
+    }
     /*
      * Método usado para agregar gasto al presionar el boton flotante
      * 1. Agregar intent

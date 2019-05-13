@@ -34,7 +34,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".Gastos.GastosActivity"
-            android:label="Gestión de Gastos"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Informes.InformeActivity"
