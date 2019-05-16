@@ -1,6 +1,7 @@
 package com.company.spsolutions.gestiongasto.SolicitudGasto;
 
 import android.content.Context;
+import android.util.Log;
 
 
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
@@ -27,6 +28,7 @@ public class PresenterSolicitudImpl {
     private SolicitudService service;
     private Context context;
     private PresenterSolicitud delegate;
+    String Tag = "Edit dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
 
     public PresenterSolicitudImpl(Context context, PresenterSolicitud delegate) {
@@ -62,6 +64,8 @@ public class PresenterSolicitudImpl {
     }
 
     public void editData(String fechaInicio, String fechaFin, String descripcion, String centro, String motivo, String importe, String fechaRegistro, String fechaEnviado, String estado, String idSolicitud) {
+        Log.d(Tag, fechaInicio  + " "+  fechaFin +" "+  descripcion +" "+  centro +" "+  motivo +" "+  importe +" "+  fechaRegistro +" "+  fechaEnviado +" "+  estado +" "+  idSolicitud);
+
         if (validarCampos(fechaInicio, fechaFin, importe, motivo)) {
             Map<String, Object> updates = new HashMap<>();
             updates.put("fechaInicio", fechaInicio);
@@ -86,6 +90,37 @@ public class PresenterSolicitudImpl {
             });
         }
     }
+
+    public void editDataRechazo(String fechaInicio, String fechaFin, String descripcion, String centro, String motivo, String importe, String fechaRegistro, String fechaEnviado, String estado, String idSolicitud, String motivoRechazo) {
+        Log.d(Tag, fechaInicio  + " "+  fechaFin +" "+  descripcion +" "+  centro +" "+  motivo +" "+  importe +" "+  fechaRegistro +" "+  fechaEnviado +" "+  estado +" "+  idSolicitud);
+
+        if (validarCampos(fechaInicio, fechaFin, importe, motivo)) {
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("fechaInicio", fechaInicio);
+            updates.put("fechaFin", fechaFin);
+            updates.put("descripcion", descripcion);
+            updates.put("centro", centro);
+            updates.put("motivo", motivo);
+            updates.put("importe", importe);
+            updates.put("fechaRegistro", fechaRegistro);
+            updates.put("fechaEnviado", fechaEnviado);
+            updates.put("estado", estado);
+            updates.put("motivoRechazo",motivoRechazo);
+            connect().document(idSolicitud).update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    delegate.changeActivity();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    delegate.setError(4, "Ocurrio un error al querer guardar los datos. Intente más tarde");
+                }
+            });
+        }
+    }
+
+
 
     public Query getQuery() {
         Query ref;

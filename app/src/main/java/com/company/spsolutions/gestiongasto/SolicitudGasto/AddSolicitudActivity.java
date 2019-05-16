@@ -205,9 +205,9 @@ public class AddSolicitudActivity extends AppCompatActivity implements Presenter
         String centro = centroCostosET.getText().toString();
         String importe = importeET.getText().toString();
         if (isRegistrada) {
-            presenter.editData(fi, ff, descripcion, centro, motivo, importe, getDate(), null, null, solicitud.getId());
+           presenter.editData(fi, ff, descripcion, centro, motivo, importe, getDate(), null, null, solicitud.getId());
         } else {
-            presenter.editData(fi, ff, descripcion, centro, motivo, importe, solicitud.getFechaRegistro(), getDate(), "POR APROBAR", solicitud.getId());
+           presenter.editData(fi, ff, descripcion, centro, motivo, importe, solicitud.getFechaRegistro(), getDate(), "POR APROBAR", solicitud.getId());
         }
 
     }
