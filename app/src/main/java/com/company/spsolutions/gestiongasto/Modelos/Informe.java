@@ -1,9 +1,11 @@
 package com.company.spsolutions.gestiongasto.Modelos;
 
+import java.io.Serializable;
+
 /**
  * Created by coralRodriguez on 29/03/2019.
  */
-public class Informe {
+public class Informe  implements Serializable {
     String id;
     String idEmpresa;
     String nombreEmpresa;

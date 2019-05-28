@@ -10,19 +10,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.company.spsolutions.gestiongasto.Modelos.Informe;
+import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.R;
+import com.company.spsolutions.gestiongasto.SolicitudGasto.PresenterSolicitudImpl;
+import com.company.spsolutions.gestiongasto.SolicitudGasto.SolicitudAdapter;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by coralRodriguez on 01/04/2019
  */
-public class FragmentInformes extends Fragment {
+public class FragmentInformes extends Fragment implements PresenterInforme {
     private RecyclerView recyclerSolicitud;
     private InformesAdapter iAdapter;
     private LinearLayoutManager layoutManager;
     private static String SECTION_NUMBER;
+    PresenterInformeImpl presenter;
+    List<Informe> datos = new ArrayList<>();
+    List<Informe> datosRegistrados = new ArrayList<>();
+    List<Informe> datosProcesados = new ArrayList<>();
+
 
     public static FragmentInformes newInstance(int sectionNumber) {
         FragmentInformes fragment = new FragmentInformes();
@@ -35,30 +50,61 @@ public class FragmentInformes extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        List<ItemInforme> datos;
+        presenter = new PresenterInformeImpl(getContext(), this);
         View rootView = inflater.inflate(R.layout.fg_informes, container, false);
         recyclerSolicitud = rootView.findViewById(R.id.recycler_informes);
         recyclerSolicitud.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerSolicitud.setLayoutManager(layoutManager);
-        datos = getArguments().getInt(SECTION_NUMBER) == 1 ? getDataRegistrados() : getDataInformados();
-        iAdapter = new InformesAdapter(datos, rootView.getContext());
-        recyclerSolicitud.setAdapter(iAdapter);
+        iAdapter = new InformesAdapter(datos, getContext());
+        setListeners();
         return rootView;
     }
 
-    public List<ItemInforme> getDataRegistrados() {
-        List<ItemInforme> informes = new ArrayList<ItemInforme>();
-        informes.add(new ItemInforme("Compra de RAM", "29/10/19 - 30/10/19", "$1,600"));
-        return informes;
+private void setListeners() {
+        presenter.getQuery().addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                datosProcesados.clear();
+                datosRegistrados.clear();
+                for (DocumentSnapshot document : snapshots.getDocuments()) {
+                    Informe informe = document.toObject(Informe.class);
+                    if (informe.getEstado() != null && informe.getEstado().equals("ENVIADO")){
+                        datosProcesados.add(informe);
+                    } else if  (informe.getEstado() != null && informe.getEstado().equals("REGISTRADO")) {
+                        datosRegistrados.add(informe);
+                    }
+                }
+                datos = getArguments().getInt(SECTION_NUMBER) == 1 ? datosRegistrados : datosProcesados;
+                iAdapter.refreshSolicitudes(datos);
+                recyclerSolicitud.setAdapter(iAdapter);
+                iAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
-    public List<ItemInforme> getDataInformados() {
-        List<ItemInforme> solicitudes = new ArrayList<ItemInforme>();
-        solicitudes.add(new ItemInforme("Viaje a Cancún", "29/10/19", "$24,000", "POR APROBAR"));
-        solicitudes.add(new ItemInforme("Viaje a Guadalajara", "30/01/19", "$12,000", "POR APROBAR"));
-        return solicitudes;
+
+
+    @Override
+    public String getTotal() {
+        return null;
+    }
+
+    @Override
+    public void changeTotal(String total) {
+
+    }
+
+    @Override
+    public void setError(Integer type, String message) {
+
+    }
+
+    @Override
+    public void changeActivity() {
+
     }
 
     public static class SectionsPagerAdapter extends FragmentPagerAdapter {

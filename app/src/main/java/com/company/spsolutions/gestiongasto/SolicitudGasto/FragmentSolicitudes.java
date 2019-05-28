@@ -92,10 +92,10 @@ public class FragmentSolicitudes extends Fragment implements PresenterSolicitud 
                         if (solicitud.getEstado() != null && solicitud.getEstado().equals("Por aprobar")) {
                             datosRegistrados.add(solicitud);
 
-                        } else if (solicitud.getEstado() != null && solicitud.getEstado().equals("RECHAZADO") /*|| solicitud.getEstado().equals("RECHAZADO")*/){
+                        } else if (solicitud.getEstado() != null && solicitud.getEstado().equals("RECHAZADO")){
                             datosProcesados.add(solicitud);
                         }
-                        else if (solicitud.getEstado() != null && solicitud.getEstado().equals("APROBADO") /*|| solicitud.getEstado().equals("RECHAZADO")*/) {
+                        else if (solicitud.getEstado() != null && solicitud.getEstado().equals("APROBADO")) {
                             datosProcesados.add(solicitud);
                         }
 

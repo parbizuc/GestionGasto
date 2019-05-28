@@ -49,7 +49,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
             public void onClick(View v) {
                 if ((itemSolicitud.getEstado() == null)) {
                     Intent editar = new Intent(contexto, AddSolicitudActivity.class);
-                    editar.putExtra("solicitud", itemSolicitud);
+                    editar.putExtra("solicitud",itemSolicitud);
                     contexto.startActivity(editar);
                 } else {
                     Intent editar = new Intent(contexto, ReviewActivity.class);

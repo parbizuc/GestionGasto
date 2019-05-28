@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -20,9 +21,12 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.company.spsolutions.gestiongasto.Modelos.Empresa;
 import com.company.spsolutions.gestiongasto.Modelos.Gasto;
+import com.company.spsolutions.gestiongasto.Modelos.GastoInforme;
+import com.company.spsolutions.gestiongasto.Modelos.Informe;
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.company.spsolutions.gestiongasto.R;
@@ -31,6 +35,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.MessageFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +56,8 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
      *
      */
     RecyclerView recyclerGastos;
+    GastoInforme gastoInforme;
+    Informe informe;
     AdapterAddInforme iAdapter;
     ArrayAdapter<Solicitud> adaptersp;
     LinearLayoutManager layoutManager;
@@ -61,7 +69,9 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
     PresenterInformeImpl presenter;
     ImageButton finiIB, ffinIB;
     Spinner adelantoSP;
+    Boolean isEditar;
     String fi, ff;
+    String TAG = "HOLAAAAAAAAAAAAAAAAAAAAAAA";
     //Calendario para obtener fecha & hora
     public final Calendar c = Calendar.getInstance();
 
@@ -82,6 +92,7 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
     public void initComponents() {
         getSupportActionBar().hide();
         presenter = new PresenterInformeImpl(AddInformeActivity.this, this);
+        isEditar = getIntent().hasExtra("informe");
         fechaFinET = findViewById(R.id.fechaFinai_et);
         fechaIniET = findViewById(R.id.fechaIniai_et);
         notasET = findViewById(R.id.notaai_et);
@@ -104,6 +115,17 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerGastos.setLayoutManager(layoutManager);
+        if(isEditar){
+            informe = (Informe) getIntent().getSerializableExtra("informe");
+            tituloET.setText(informe.getTitulo());
+            fechaIniET.setText(convertDate(informe.getFechaInicio()));
+            fechaFinET.setText(convertDate(informe.getFechaFin()));
+            notasET.setText(informe.getComentario());
+            totalTV.setText(informe.getMontoInforme());
+            fi = informe.getFechaInicio();
+            ff = informe.getFechaFin();
+            //adelantoSP
+        }
         adelantoSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -195,13 +217,23 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         guardarBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               if(isEditar){
                 sendData(false);
+               }
+               else{
+                   editInfomre(false);}
             }
+
         });
         enviarBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isEditar){
                 sendData(true);
+                }
+                else{
+                    editInfomre(true);}
+
             }
         });
     }
@@ -225,7 +257,6 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         }, anio, mes, dia);
         recogerFecha.show();
     }
-
     public void sendData(Boolean isEnviada) {
         String titulo = tituloET.getText().toString();
         String monto = totalTV.getText().toString();
@@ -240,12 +271,47 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
             presenter.addInforme(titulo, fi, ff, nota, monto, getDate(), null, "REGISTRADO", adelanto, iAdapter.getItemsSelect());
     }
 
+    private void editInfomre(Boolean isEnviada) {
+        String titulo = tituloET.getText().toString();
+        String monto = totalTV.getText().toString();
+        String nota = notasET.getText().toString();
+        String fechaI = fechaIniET.getText().toString();
+        String fechaF = fechaFinET.getText().toString();
+        Solicitud adelanto = null;
+       /* if (adelantoSP.getSelectedItemPosition() != 0) {
+            adelanto = (Solicitud) adelantoSP.getSelectedItem();
+        }*/
+
+        if (isEnviada) {
+            presenter.editData(titulo,fechaI,fechaF,nota,monto,informe.getFechaRegistro(),informe.getFechaEnvio(),"ENVIADO", iAdapter.getItemsSelect(), informe.getId());
+           // Toast.makeText(this,iAdapter.getItemsSelect().toString() , Toast.LENGTH_SHORT).show();
+        } else {
+            presenter.editData(titulo,fechaI,fechaF,nota,monto,informe.getFechaRegistro(),informe.getFechaEnvio(),"REGISTRADO",iAdapter.getItemsSelect(),  informe.getId());
+
+        }
+
+    }
+
     private String getDate() {
         String date;
         Date d = new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
         date = simpleDate.format(d);
         return date;
+    }
+
+    private String convertDate(String fecha) {
+        String newDate;
+        Date date1 = null;
+        try {
+            date1 = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyy");
+        newDate = format.format(date1);
+        return newDate;
+
     }
 
     @Override

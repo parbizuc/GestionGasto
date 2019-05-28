@@ -32,11 +32,13 @@ import javax.annotation.Nullable;
  */
 public class PresenterInformeImpl {
     Context context;
+    GastoInforme gastoInforme;
     PresenterInforme delegate;
     GastoService serviceGastos;
     SolicitudService serviceSolicitud;
     InformeService serviceInforme;
     Double currentTotal = 0.00;
+    private InformeService service;
 
     public PresenterInformeImpl(Context context, PresenterInforme delegate) {
         this.context = context;
@@ -137,6 +139,69 @@ public class PresenterInformeImpl {
         }
     }
 
+    public void editData(String titulo, String fechaInicio, String fechaFin, String comentario, String monto, String fechaRegistro, String fechaEnviado, String estado,List<Gasto> gastos, String idinforme){
+   /*
+      DocumentReference refI = connectInforme().document();
+        String idInfo = refI.getId();
+        Informe informe;
+        Usuario usuario = Usuario.getInstance();
+        Empresa empresa = Empresa.getInstance();
+
+        if (solicitud == null) {
+            informe = new Informe(idInfo, empresa.getId(), empresa.getNombre(), titulo, null, fechaInicio, fechaFin, comentario, monto, empresa.getMoneda(), usuario.getId(), usuario.getNombre(), fechaRegistro, fechaEnviado, estado);
+        } else {
+            informe = new Informe(idInfo, empresa.getId(), empresa.getNombre(), titulo, solicitud.getId(), fechaInicio, fechaFin, comentario, monto, empresa.getMoneda(), usuario.getId(), usuario.getNombre(), fechaRegistro, fechaEnviado, estado);
+        }
+        for (Gasto gasto : gastos) {
+            DocumentReference refGI = connectGastosInf().document();
+            String idGI = refGI.getId();
+            GastoInforme gastoInforme = new GastoInforme(idGI, idInfo, gasto.getId(), "REGISTRADO");
+            refGI.set(gastoInforme);
+            Map<String, Object> data = new HashMap<>();
+            data.put("estado", "INFORMADO");
+            connectGastos().document(gasto.getId()).set(data, SetOptions.merge());
+        }
+        refI.set(informe).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                delegate.changeActivity();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                delegate.setError(6, "Ocurrio un error");
+            }
+        });
+*/
+        if (validarCampos(fechaInicio, fechaFin, gastos, titulo)) {
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("fechaInicio", fechaInicio);
+            updates.put("fechaFin", fechaFin);
+            updates.put("titulo", titulo);
+            updates.put("comentario", comentario);
+            updates.put("monto", monto);
+            updates.put("fechaRegistro", fechaRegistro);
+            updates.put("fechaEnviado", fechaEnviado);
+            updates.put("estado", estado);
+           // updates.put("gastoInforemid", gastoInforemid);
+          //  updates.put("id", idinforme);
+          //  updates.put("solicitud", solicitud.getId());
+
+
+            connect().document(idinforme).update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    delegate.changeActivity();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    delegate.setError(4, "Ocurrio un error al querer guardar los datos. Intente más tarde");
+                }
+            });
+        }
+
+    }
 
     private Boolean validarCampos(String fechaInicio, String fechaFin, List<Gasto> gastos, String titulo) {
         if (fechaInicio.equals("")) {
@@ -163,5 +228,20 @@ public class PresenterInformeImpl {
      * Obtener los informes de firebase
      */
     public void getInformes() {
+    }
+
+    public Query getQuery() {
+        Query ref;
+        if (Usuario.getInstance().getRol().equals("usuario")) {
+            ref = connect().whereEqualTo("idUsuario", Usuario.getInstance().getId());
+        } else {
+            ref = connect().orderBy("idUsuario");
+        }
+        return ref;
+    }
+
+    public CollectionReference connect() {
+        service = new InformeService();
+        return service.connectFirebase();
     }
 }
