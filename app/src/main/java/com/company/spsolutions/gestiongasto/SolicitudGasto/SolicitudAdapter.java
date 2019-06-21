@@ -34,9 +34,9 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
     public void onBindViewHolder(final CardHolder registroHolder, final int i) {
         final Solicitud itemSolicitud = itemsSolicitud.get(i);
         registroHolder.nombreTV.setText(itemSolicitud.getNombreUsuario());
-        registroHolder.descripcionTV.setText(itemSolicitud.getDescripcion());
+        registroHolder.motivorsTV.setText(itemSolicitud.getMotivo());
         registroHolder.fechaTV.setText(itemSolicitud.getFechaInicio());
-        registroHolder.dineroTV.setText("$" + itemSolicitud.getImporte());
+        registroHolder.dineroTV.setText(itemSolicitud.getImporte());//("$" + itemSolicitud.getImporte());
         registroHolder.labelSolicitudTV.setText(itemSolicitud.getEstado());
         /*
         if ((itemSolicitud.getEstado() == null)) {
@@ -74,7 +74,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
 
     public static class CardHolder extends RecyclerView.ViewHolder {
         public TextView nombreTV;
-        public TextView descripcionTV;
+        public TextView motivorsTV;
         public TextView fechaTV;
         public TextView dineroTV;
         public TextView labelSolicitudTV;
@@ -83,7 +83,7 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
         public CardHolder(View card) {
             super(card);
             nombreTV = card.findViewById(R.id.nombre_tv);
-            descripcionTV = card.findViewById(R.id.descripcion_tv);
+            motivorsTV = card.findViewById(R.id.motivors_tv);
             fechaTV = card.findViewById(R.id.fecha_tv);
             dineroTV = card.findViewById(R.id.dinero_tv);
             labelSolicitudTV = card.findViewById(R.id.labelSolicitud_tv);

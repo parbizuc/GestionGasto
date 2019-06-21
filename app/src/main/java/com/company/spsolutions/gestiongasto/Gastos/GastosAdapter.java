@@ -37,8 +37,12 @@ public class GastosAdapter extends RecyclerView.Adapter<GastosAdapter.CardHolder
         Gasto itemGasto = itemsGasto.get(i);
        // registroHolder.nombreTV.setText(itemGasto.nombre);
        // Glide.with(contexto).load(itemGasto.imagen).into(registroHolder.fotoIV);
-        registroHolder.monedaTV.setText(itemGasto.getMonedaGasto());
-        registroHolder.provedorTV.setText(itemGasto.getNombreProveedor());
+        //registroHolder.monedaTV.setText(itemGasto.getMonedaGasto());
+        if(itemGasto.getNombreProveedor().length()<15){
+            registroHolder.provedorTV.setText(itemGasto.getNombreProveedor());
+        }else {
+            registroHolder.provedorTV.setText(new String(itemGasto.getNombreProveedor()).substring(0, 15));
+        }
         registroHolder.fechaTV.setText(itemGasto.getFechaGasto());
         registroHolder.dineroTV.setText(itemGasto.getMontoGasto());
         //registroHolder.labelTV.setText(itemGasto.getMonedaGasto());
@@ -47,7 +51,7 @@ public class GastosAdapter extends RecyclerView.Adapter<GastosAdapter.CardHolder
         registroHolder.gastoCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(contexto, "MANDAR A EDITAR" + i, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(contexto, "MANDAR A EDITAR" + i, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -69,7 +73,7 @@ public class GastosAdapter extends RecyclerView.Adapter<GastosAdapter.CardHolder
         notifyDataSetChanged();
     }
     public static class CardHolder extends RecyclerView.ViewHolder {
-        public TextView monedaTV;
+        //public TextView monedaTV;
         public TextView fechaTV;
         public TextView dineroTV;
         public TextView labelTV;
@@ -78,7 +82,7 @@ public class GastosAdapter extends RecyclerView.Adapter<GastosAdapter.CardHolder
 
         public CardHolder(View card) {
             super(card);
-            monedaTV = card.findViewById(R.id.moneda_tv);
+            //monedaTV = card.findViewById(R.id.moneda_tv);
             fechaTV = card.findViewById(R.id.fechag_tv);
             dineroTV = card.findViewById(R.id.dinerog_tv);
             gastoCV = card.findViewById(R.id.gasto_cv);
