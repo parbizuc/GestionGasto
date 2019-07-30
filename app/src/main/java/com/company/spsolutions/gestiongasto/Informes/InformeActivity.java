@@ -4,7 +4,9 @@ package com.company.spsolutions.gestiongasto.Informes;
  */
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -44,11 +46,12 @@ public class InformeActivity extends AppCompatActivity implements PresenterInfor
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#0070c0"));
+        tabLayout.setSelectedTabIndicatorHeight((int) (5 * getResources().getDisplayMetrics().density));
+        tabLayout.setTabTextColors(Color.parseColor("#c5d1e1"), Color.parseColor("#ffffff"));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
     }
-
     /*
      * Mandar al activity para agregar un informe
      */
@@ -74,4 +77,5 @@ public class InformeActivity extends AppCompatActivity implements PresenterInfor
     public void changeActivity() {
 
     }
+
 }

@@ -7,21 +7,24 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
+            android:maxWidth="@dimen/llmaxWidth"
+            android:layout_weight="0.9"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
+            android:layout_marginTop="@dimen/marginTopItems"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/nombrei_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hotel Guadalajara hhgghhjgjh"
-                android:textSize="12sp" />
+                android:text="Titulo del informe"
+                android:textColor="@color/negro"
+                android:textSize="@dimen/labelMotivo" />
 
 
             <TextView
@@ -29,9 +32,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="26/10/19"
-                android:textSize="12sp" />
+                android:textSize="@dimen/labeFecha"
+                android:textColor="@color/red" />
 
             <TextView
+                android:id="@+id/fechaf_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="26/10/19"
+                android:textSize="@dimen/labeFecha"
+                android:textColor="@color/red" />
+            <TextView
+                android:id="@+id/nusuario_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre Usuario"
+                android:textSize="@dimen/labeNombreSmall" />
+
+            <!--TextView
                 android:id="@+id/labelInforme_tv"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
@@ -39,23 +57,42 @@
                 android:background="@drawable/label_solicitud"
                 android:gravity="center"
                 android:text="Por aprobar"
-                android:textSize="12sp" />
+                android:textSize="12sp" /-->
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/minWidthpItemsDerecha"
+            android:layout_marginTop="@dimen/marginTopItems"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="40dp"
-            android:gravity="center">
+            android:gravity="right"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/dineroi_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$12,000"
-                android:textSize="20sp" />
+                android:textSize="@dimen/labeItemMonto"
+                android:textColor="@color/azulLabel" />
+            <TextView
+                android:id="@+id/monedainforme_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mtmoneda"
+                android:gravity="center"
+                android:text="Moneda"
+                android:textSize="@dimen/labeItemMoneda"
+                android:textColor="@color/azulLabel"/>
+
+            <Button
+                android:id="@+id/borrarInf_btn"
+                android:layout_width="@dimen/tamBtnBorrar"
+                android:layout_height="@dimen/tamBtnBorrar"
+                android:background="@drawable/btn_delete"
+                android:textAllCaps="false"/>
+
         </LinearLayout>
 
     </LinearLayout>

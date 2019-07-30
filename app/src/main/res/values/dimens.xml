@@ -4,4 +4,15 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="marginTopItems">20dp</dimen>
+    <dimen name="minWidthpItemsDerecha">200dp</dimen>
+    <dimen name="labelMotivo">20sp</dimen>
+    <dimen name="labeFecha">14dp</dimen>
+    <dimen name="labeNombreSmall">12dp</dimen>
+    <dimen name="labeItemMonto">30dp</dimen>
+    <dimen name="labeItemMoneda">14dp</dimen>
+    <dimen name="tamBtnBorrar">40dp</dimen>
+    <dimen name="marin10pd">10dp</dimen>
+    <dimen name="llmaxWidth">200dp</dimen>
+    <dimen name="mtmoneda">-5dp</dimen>
 </resources>

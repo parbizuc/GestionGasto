@@ -7,4 +7,9 @@
     <color name="grisApp">#969FAA</color>
     <color name="textoMenu">#0C3460</color>
     <color name="green">#62FA5C</color>
+    <color name="red">#F00</color>
+    <color name="azulTab">#0070c0</color>
+    <color name="azulLabel">#4472c4</color>
+    <color name="noSeleccionado">#355883</color>
+    <color name="negro">#000</color>
 </resources>

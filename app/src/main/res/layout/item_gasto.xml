@@ -12,8 +12,10 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
+            android:maxWidth="@dimen/llmaxWidth"
+            android:layout_weight="0.4"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/marginTopItems"
             android:orientation="vertical">
 
             <TextView
@@ -21,32 +23,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre proveedor"
-                android:textSize="20sp" />
-
-            <!--TextView
-                android:id="@+id/moneda_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MONEDA"
-                android:textSize="20sp" /!-->
-
-
-
+                android:textColor="@color/negro"
+                android:textSize="@dimen/labelMotivo" />
 
             <TextView
                 android:id="@+id/fechag_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="26/10/19"
-                android:textSize="16sp" />
+                android:textSize="@dimen/labeFecha"
+                android:textColor="@color/red" />
+
+            <TextView
+                android:id="@+id/categoria_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categoria"
+                android:textSize="@dimen/labeNombreSmall" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/minWidthpItemsDerecha"
+            android:layout_marginTop="@dimen/marginTopItems"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
-            android:gravity="center"
+            android:gravity="right"
             android:orientation="vertical">
 
             <TextView
@@ -54,15 +56,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$12,000"
-                android:textSize="18sp" />
+                android:textSize="@dimen/labeItemMonto"
+                android:textColor="@color/azulLabel" />
 
             <TextView
                 android:id="@+id/labelGasto_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/mtmoneda"
                 android:gravity="center"
-                android:text="Pendiente" />
+                android:text="Moneda"
+                android:textSize="@dimen/labeItemMoneda"
+                android:textColor="@color/azulLabel" />
+            <Button
+                android:id="@+id/borrargasto_btn"
+                android:layout_width="@dimen/tamBtnBorrar"
+                android:layout_height="@dimen/tamBtnBorrar"
+                android:background="@drawable/btn_delete"
+                android:textAllCaps="false"/>
+
         </LinearLayout>
 
     </LinearLayout>

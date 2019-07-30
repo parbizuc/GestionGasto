@@ -37,21 +37,53 @@ public class AdapterAddInforme extends RecyclerView.Adapter<AdapterAddInforme.Ca
      */
     @Override
     public void onBindViewHolder(final CardHolder registroHolder, final int i) {
-        final Gasto itemGasto = itemsGasto.get(i);
-        registroHolder.nombreTV.setText(itemGasto.getNombreProveedor());
-        registroHolder.gastoCB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (registroHolder.gastoCB.isChecked()) {
-                    itemsSelect.add(itemGasto);
-                    presenter.total(itemGasto.getMontoGasto(),true);
-                }else{
-                    itemsSelect.remove(itemGasto);
-                    presenter.total(itemGasto.getMontoGasto(),false);
-                }
 
-            }
-        });
+        final Gasto itemGasto = itemsGasto.get(i);
+        if(itemGasto.getNombreProveedor().length()>25){
+            registroHolder.nombreTV.setText(itemGasto.getNombreProveedor().substring(0,25));
+        }else {
+            registroHolder.nombreTV.setText(itemGasto.getNombreProveedor());
+        }
+        if(itemGasto.getEstado().equals("REGISTRADO")) {
+            registroHolder.gastoCB.setChecked(false);
+        }
+        if(itemGasto.getEstado().equals("INFORMADO")){
+            registroHolder.gastoCB.setChecked(true);
+            itemsSelect.add(itemGasto);
+        }
+        if(itemGasto.getEstado().equals("ENVIADO")){
+            registroHolder.gastoCB.setChecked(true);
+            registroHolder.gastoCB.setEnabled(false);
+        }
+        registroHolder.montoChecTV.setText("$"+itemGasto.getMontoGasto());
+        System.out.println("nombre provedor -->"+itemGasto.getNombreProveedor()+"");
+        System.out.println("itemGasto.getEstado() -->"+itemGasto.getEstado()+"");
+            registroHolder.gastoCB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (registroHolder.gastoCB.isChecked()) {
+                        System.out.println("Valor Cambiado a true");
+                        itemGasto.setEstado("REGISTRADO");
+                        if(itemsSelect.contains(itemGasto)){
+                            itemsSelect.remove(itemGasto);
+                        }
+                        itemGasto.setEstado("INFORMADO");
+                        itemsSelect.add(itemGasto);
+                        presenter.total(itemGasto.getMontoGasto(),true);
+                    }else{
+                        System.out.println("Valor Cambiado a false");
+                        itemGasto.setEstado("INFORMADO");
+                        if(itemsSelect.contains(itemGasto)){
+                            itemsSelect.remove(itemGasto);
+                        }
+                        itemGasto.setEstado("REGISTRADO");
+                        itemsSelect.add(itemGasto);
+                        presenter.total(itemGasto.getMontoGasto(),false);
+                    }
+                    System.out.println("itemsSelect.toArray()-> "+itemsSelect.toArray());
+                }
+            });
+
     }
 
     @Override
@@ -72,12 +104,14 @@ public class AdapterAddInforme extends RecyclerView.Adapter<AdapterAddInforme.Ca
 
     public static class CardHolder extends RecyclerView.ViewHolder {
         public TextView nombreTV;
+        public TextView montoChecTV;
         public CheckBox gastoCB;
 
         public CardHolder(View card) {
             super(card);
             nombreTV = card.findViewById(R.id.gtitleai_tv);
             gastoCB = card.findViewById(R.id.checkgasto_cb);
+            montoChecTV=card.findViewById(R.id.montoChec_tv);
         }
     }
 

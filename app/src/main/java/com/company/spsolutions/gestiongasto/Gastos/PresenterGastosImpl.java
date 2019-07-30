@@ -368,9 +368,9 @@ public class PresenterGastosImpl {
                         String idDoc = ref.getId();
                         Gasto gasto;
                         if (anticipo != null) {
-                            gasto = new Gasto(estado, fechaG, idDoc, empresa.getId(), moneda, montoG, empresa.getNombre(), nombreP, downloadLink.toString(), anticipo.getId(), anticipo.getImporte(), anticipo.getMoneda(), categoria, comentario, usuario.getId(), usuario.getNombre(), esRecurrente, periodo);
+                            gasto = new Gasto(estado, fechaG, idDoc, empresa.getId(), moneda, montoG, empresa.getNombre(), nombreP, downloadLink.toString(), anticipo.getId(), anticipo.getImporte(), anticipo.getMoneda(), categoria, comentario, usuario.getId(), usuario.getNombre(), esRecurrente, periodo,"");
                         } else {
-                            gasto = new Gasto(estado, fechaG, idDoc, empresa.getId(), moneda, montoG, empresa.getNombre(), nombreP, downloadLink.toString(), "", "", "", categoria, comentario, usuario.getId(), usuario.getNombre(), esRecurrente, periodo);
+                            gasto = new Gasto(estado, fechaG, idDoc, empresa.getId(), moneda, montoG, empresa.getNombre(), nombreP, downloadLink.toString(), "", "", "", categoria, comentario, usuario.getId(), usuario.getNombre(), esRecurrente, periodo,"");
                         }
                         ref.set(gasto).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

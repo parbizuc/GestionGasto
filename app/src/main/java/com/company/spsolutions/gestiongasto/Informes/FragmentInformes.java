@@ -63,6 +63,7 @@ public class FragmentInformes extends Fragment implements PresenterInforme {
     }
 
 private void setListeners() {
+        System.out.println("setListeners en FragmentInformes");
         presenter.getQuery().addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
@@ -70,9 +71,10 @@ private void setListeners() {
                 datosRegistrados.clear();
                 for (DocumentSnapshot document : snapshots.getDocuments()) {
                     Informe informe = document.toObject(Informe.class);
+                    System.out.println("setListeners->informe"+informe+"");
                     if (informe.getEstado() != null && informe.getEstado().equals("ENVIADO")){
                         datosProcesados.add(informe);
-                    } else if  (informe.getEstado() != null && informe.getEstado().equals("REGISTRADO")) {
+                    } else if  (informe.getEstado() != null && informe.getEstado().equals("INFORMADO")) {
                         datosRegistrados.add(informe);
                     }
                 }

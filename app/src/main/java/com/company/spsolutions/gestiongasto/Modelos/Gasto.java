@@ -22,7 +22,7 @@ public class Gasto {
     String nombreUsuario;
     Boolean esRecurrente;
     String periodoRecurrente;
-
+    String idInforme;
     public Gasto() {
 
     }
@@ -38,7 +38,7 @@ public class Gasto {
         this.nombreProveedor = nombreProveedor;
     }
 
-    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor, String imagen, String idAnticipo, String montoAnticipo, String monedaAnticipo, String categoria, String comentario, String idUsuario, String nombreUsuario, Boolean esRecurrente, String periodoRecurrente) {
+    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor, String imagen, String idAnticipo, String montoAnticipo, String monedaAnticipo, String categoria, String comentario, String idUsuario, String nombreUsuario, Boolean esRecurrente, String periodoRecurrente, String idInforme) {
         this.estado = estado;
         this.fechaGasto = fechaGasto;
         this.id = id;
@@ -57,6 +57,7 @@ public class Gasto {
         this.nombreUsuario = nombreUsuario;
         this.esRecurrente = esRecurrente;
         this.periodoRecurrente = periodoRecurrente;
+        this.idInforme = idInforme;
     }
 
     public String getImagen() {
@@ -197,6 +198,13 @@ public class Gasto {
 
     public String getNombreProveedor() {
         return nombreProveedor;
+    }
+
+    public String getidInforme() {
+        return idInforme;
+    }
+    public void setidInforme(String idInforme) {
+        this.idInforme = idInforme;
     }
 
     public void setNombreProveedor(String nombreProveedor) {

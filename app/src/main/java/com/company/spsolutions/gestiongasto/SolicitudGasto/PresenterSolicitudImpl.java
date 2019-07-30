@@ -28,7 +28,7 @@ public class PresenterSolicitudImpl {
     private SolicitudService service;
     private Context context;
     private PresenterSolicitud delegate;
-    String Tag = "Edit dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    String Tag = "Edit data";
 
 
     public PresenterSolicitudImpl(Context context, PresenterSolicitud delegate) {

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -30,9 +31,11 @@ import com.company.spsolutions.gestiongasto.Modelos.Informe;
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.company.spsolutions.gestiongasto.R;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.MessageFormat;
@@ -72,6 +75,7 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
     Boolean isEditar;
     String fi, ff;
     String TAG = "HOLAAAAAAAAAAAAAAAAAAAAAAA";
+    Query ref ;
     //Calendario para obtener fecha & hora
     public final Calendar c = Calendar.getInstance();
 
@@ -83,15 +87,21 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("onCreate AddInformeActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addinforme);
-        initComponents();
-        setListeners();
+        String editable= initComponents();
+        if(editable.equals("EDITABLE")){
+            setListeners();
+        }
     }
 
-    public void initComponents() {
+    public String initComponents() {
+        String tipo="EDITABLE";
+        System.out.println("initComponents");
         getSupportActionBar().hide();
         presenter = new PresenterInformeImpl(AddInformeActivity.this, this);
+        System.out.println("getIntent().hasExtra(informe)"+getIntent().hasExtra("informe")+"");
         isEditar = getIntent().hasExtra("informe");
         fechaFinET = findViewById(R.id.fechaFinai_et);
         fechaIniET = findViewById(R.id.fechaIniai_et);
@@ -110,21 +120,35 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         recyclerGastos = findViewById(R.id.listagai_rv);
         fi = "";
         ff = "";
-        getDatos();
+
         recyclerGastos.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerGastos.setLayoutManager(layoutManager);
+        System.out.println(" initComponents - isEditar"+isEditar+"");
         if(isEditar){
             informe = (Informe) getIntent().getSerializableExtra("informe");
+            System.out.println("initComponents =>"+informe+"");
             tituloET.setText(informe.getTitulo());
+            System.out.println("informe.getTitulo()= "+informe.getTitulo()+"");
+            System.out.println("informe.getFechaInicio()="+informe.getFechaInicio());
+            System.out.println("informe.getFechaFin()= "+informe.getFechaFin());
             fechaIniET.setText(convertDate(informe.getFechaInicio()));
             fechaFinET.setText(convertDate(informe.getFechaFin()));
             notasET.setText(informe.getComentario());
             totalTV.setText(informe.getMontoInforme());
             fi = informe.getFechaInicio();
             ff = informe.getFechaFin();
+            getDatos(informe.getEstado());
+            if (informe.getEstado().equals("ENVIADO")){
+                tipo="NOEDITABLE";
+                tituloET.setEnabled(false);
+                notasET.setEnabled(false);
+                totalTV.setEnabled(false);
+            }
             //adelantoSP
+        }else{
+            getDatos("NUEVO");
         }
         adelantoSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -141,23 +165,82 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         empresaTV.setText(Empresa.getInstance().getNombre());
         usuarioTV.setText(Usuario.getInstance().getNombre());
         rolTV.setText(Usuario.getInstance().getRol());
+        return tipo;
     }
 
-    private void getDatos() {
-        presenter.searchGastos().addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                gastos.clear();
-                for (DocumentSnapshot document : snapshots.getDocuments()) {
-                    Gasto gasto = document.toObject(Gasto.class);
-                    gastos.add(gasto);
-                }
-                iAdapter = new AdapterAddInforme(gastos, getApplicationContext(), presenter);
-                recyclerGastos.setAdapter(iAdapter);
-                ViewCompat.setNestedScrollingEnabled(recyclerGastos, false);
+    private void getDatos(String estado) {
+        System.out.println("Estado -->"+estado+"");
+        if(estado.equals("INFORMADO")){
+            presenter.searchGastos("INFORMADO").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                    gastos.clear();
+                    for (DocumentSnapshot document : snapshots.getDocuments()) {
+                        Gasto gasto = document.toObject(Gasto.class);
+                        if(gasto.getidInforme().equals(informe.getId())){
+                            gastos.add(gasto);
+                        }
+                    }
+                    System.out.println("gastos.size()-> "+gastos.size());
+                    iAdapter = new AdapterAddInforme(gastos, getApplicationContext(), presenter);
+                    recyclerGastos.setAdapter(iAdapter);
+                    ViewCompat.setNestedScrollingEnabled(recyclerGastos, false);
 
-            }
-        });
+                }
+            });
+            presenter.searchGastos("NUEVO").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                    for (DocumentSnapshot document : snapshots.getDocuments()) {
+                        Gasto gasto = document.toObject(Gasto.class);
+                        gastos.add(gasto);
+                    }
+                    System.out.println("gastos.size()-> "+gastos.size());
+                    iAdapter = new AdapterAddInforme(gastos, getApplicationContext(), presenter);
+                    recyclerGastos.setAdapter(iAdapter);
+                    ViewCompat.setNestedScrollingEnabled(recyclerGastos, false);
+
+                }
+            });
+        }
+        if(estado.equals("NUEVO")){
+            presenter.searchGastos("NUEVO").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                    gastos.clear();
+                    for (DocumentSnapshot document : snapshots.getDocuments()) {
+                        Gasto gasto = document.toObject(Gasto.class);
+                            gastos.add(gasto);
+                    }
+                    System.out.println("gastos.size()-> "+gastos.size());
+                    iAdapter = new AdapterAddInforme(gastos, getApplicationContext(), presenter);
+                    recyclerGastos.setAdapter(iAdapter);
+                    ViewCompat.setNestedScrollingEnabled(recyclerGastos, false);
+
+                }
+            });
+        }
+        if(estado.equals("ENVIADO")){
+            presenter.searchGastos("ENVIADO").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                    gastos.clear();
+                    for (DocumentSnapshot document : snapshots.getDocuments()) {
+                        Gasto gasto = document.toObject(Gasto.class);
+                        System.out.println("gasto.getidInformer(): "+gasto.getidInforme()+"");
+                        System.out.println("informe.getId():"+informe.getId()+"");
+                        if(gasto.getidInforme().equals(informe.getId())){
+                            gastos.add(gasto);
+                        }
+                    }
+                    System.out.println("gastos.size()-> "+gastos.size());
+                    iAdapter = new AdapterAddInforme(gastos, getApplicationContext(), presenter);
+                    recyclerGastos.setAdapter(iAdapter);
+                    ViewCompat.setNestedScrollingEnabled(recyclerGastos, false);
+
+                }
+            });
+        }
         presenter.searchAdelantos().addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
@@ -217,7 +300,9 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         guardarBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(isEditar){
+                System.out.print("boton guadar:->");
+                System.out.print("isEditar: ="+isEditar+"");
+                if(!isEditar){
                 sendData(false);
                }
                else{
@@ -228,7 +313,9 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         enviarBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isEditar){
+                System.out.print("boton enviar:-> ");
+                System.out.print("isEditar ->"+isEditar);
+                if(!isEditar){
                 sendData(true);
                 }
                 else{
@@ -268,28 +355,33 @@ public class AddInformeActivity extends AppCompatActivity implements PresenterIn
         if (isEnviada)
             presenter.addInforme(titulo, fi, ff, nota, monto, null, getDate(), "ENVIADO", adelanto, iAdapter.getItemsSelect());
         else
-            presenter.addInforme(titulo, fi, ff, nota, monto, getDate(), null, "REGISTRADO", adelanto, iAdapter.getItemsSelect());
+            presenter.addInforme(titulo, fi, ff, nota, monto, getDate(), null, "INFORMADO", adelanto, iAdapter.getItemsSelect());
     }
 
     private void editInfomre(Boolean isEnviada) {
+        System.out.println("editInfomre");
         String titulo = tituloET.getText().toString();
         String monto = totalTV.getText().toString();
         String nota = notasET.getText().toString();
         String fechaI = fechaIniET.getText().toString();
         String fechaF = fechaFinET.getText().toString();
+        System.out.println("titulo: "+titulo+"");
+        System.out.println("monto: "+monto+"");
+        System.out.println("nota: "+nota+"");
+        System.out.println("fechaI: "+fechaI+"");
+        System.out.println("fecha: "+fechaF+"");
         Solicitud adelanto = null;
        /* if (adelantoSP.getSelectedItemPosition() != 0) {
             adelanto = (Solicitud) adelantoSP.getSelectedItem();
         }*/
-
+        System.out.println("informe: "+informe+"");
+        System.out.println("isEnviada: "+isEnviada+"");
         if (isEnviada) {
             presenter.editData(titulo,fechaI,fechaF,nota,monto,informe.getFechaRegistro(),informe.getFechaEnvio(),"ENVIADO", iAdapter.getItemsSelect(), informe.getId());
            // Toast.makeText(this,iAdapter.getItemsSelect().toString() , Toast.LENGTH_SHORT).show();
         } else {
-            presenter.editData(titulo,fechaI,fechaF,nota,monto,informe.getFechaRegistro(),informe.getFechaEnvio(),"REGISTRADO",iAdapter.getItemsSelect(),  informe.getId());
-
+            presenter.editData(titulo,fechaI,fechaF,nota,monto,informe.getFechaRegistro(),informe.getFechaEnvio(),"INFORMADO",iAdapter.getItemsSelect(),  informe.getId());
         }
-
     }
 
     private String getDate() {
