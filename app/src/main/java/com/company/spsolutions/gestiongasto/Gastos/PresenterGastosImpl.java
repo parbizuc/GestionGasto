@@ -109,7 +109,7 @@ public class PresenterGastosImpl {
         //delegate.displayProgress(true, "Analizando Imagen");
         InputStream imageInputStream = context.getContentResolver().openInputStream(file);
         final byte[] imageArray = IOUtils.toByteArray(imageInputStream);
-        AmazonRekognition rekognitionClient = new AmazonRekognitionClient(new BasicAWSCredentials("AKIAR4ZFJVKMXECCQELG", "gDoPReVKxpaWLz5/Pw/sdFuFrl1tdAm96tMEztcy"));
+        AmazonRekognition rekognitionClient = new AmazonRekognitionClient(new BasicAWSCredentials("AKIAJTRHHLGO2ISXT6LQ", "SZwQtGA3fDTEkcjolnfG10XXlD7pLb1UDUcyHAce"));
         DetectTextRequest request = new DetectTextRequest().withImage(new Image().withBytes(ByteBuffer.wrap(imageArray)));
         try {
             DetectTextResult result = rekognitionClient.detectText(request);
@@ -120,6 +120,7 @@ public class PresenterGastosImpl {
             ticketAnalize();
         } catch (Exception e) {
             e.printStackTrace();
+            delegate.displayTicketResults("", "");
         }
     }
 
