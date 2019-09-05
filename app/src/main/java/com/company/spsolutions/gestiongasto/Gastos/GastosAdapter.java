@@ -2,6 +2,7 @@ package com.company.spsolutions.gestiongasto.Gastos;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -54,10 +55,14 @@ public class GastosAdapter extends RecyclerView.Adapter<GastosAdapter.CardHolder
         //registroHolder.labelTV.setText(itemGasto.getMonedaGasto());
         //estado = itemGasto.getEstado();
         registroHolder.labelTV.setText(itemGasto.getMonedaGasto());
+        //--Editar Gasto
         registroHolder.gastoCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(contexto, "MANDAR A EDITAR" + i, Toast.LENGTH_SHORT).show();
+                Intent editar = new Intent(contexto, AddGastoActivity.class);
+                editar.putExtra("gasto",itemGasto);
+                contexto.startActivity(editar);
             }
         });
 

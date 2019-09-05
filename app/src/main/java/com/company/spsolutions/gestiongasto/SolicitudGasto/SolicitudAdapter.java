@@ -48,8 +48,8 @@ public class SolicitudAdapter extends RecyclerView.Adapter<SolicitudAdapter.Card
         }
         registroHolder.fechaTV.setText(itemSolicitud.getFechaInicio());
         registroHolder.fechaIITV.setText(itemSolicitud.getFechaFin());
-        System.out.println("Importe con formato ->" + formateador.format(Integer.parseInt(itemSolicitud.getImporte())));
-        String montoFormato = formateador.format(Integer.parseInt(itemSolicitud.getImporte()));
+        System.out.println("Importe con formato ->" + formateador.format(Double.parseDouble(itemSolicitud.getImporte())));
+        String montoFormato = formateador.format(Double.parseDouble(itemSolicitud.getImporte()));
         if (!montoFormato.contains(".")) {
             montoFormato = montoFormato + ".00";
         }

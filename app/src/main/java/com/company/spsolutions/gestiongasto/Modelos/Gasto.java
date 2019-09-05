@@ -1,9 +1,11 @@
 package com.company.spsolutions.gestiongasto.Modelos;
 
+import java.io.Serializable;
+
 /**
  * Created by coralRodriguez on 27/03/19.
  */
-public class Gasto {
+public class Gasto implements Serializable {
     String estado;
     String fechaGasto;
     String id;
@@ -23,11 +25,12 @@ public class Gasto {
     Boolean esRecurrente;
     String periodoRecurrente;
     String idInforme;
+    String urldocumento;
     public Gasto() {
 
     }
 
-    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor) {
+    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor, String urlDocumento) {
         this.estado = estado;
         this.fechaGasto = fechaGasto;
         this.id = id;
@@ -36,9 +39,18 @@ public class Gasto {
         this.montoGasto = montoGasto;
         this.nombreEmpresa = nombreEmpresa;
         this.nombreProveedor = nombreProveedor;
+        this.urldocumento = urlDocumento;
     }
 
-    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor, String imagen, String idAnticipo, String montoAnticipo, String monedaAnticipo, String categoria, String comentario, String idUsuario, String nombreUsuario, Boolean esRecurrente, String periodoRecurrente, String idInforme) {
+    public String getUrldocumento() {
+        return urldocumento;
+    }
+
+    public void setUrldocumento(String urldocumento) {
+        this.urldocumento = urldocumento;
+    }
+
+    public Gasto(String estado, String fechaGasto, String id, String idEmpresa, String monedaGasto, String montoGasto, String nombreEmpresa, String nombreProveedor, String imagen, String idAnticipo, String montoAnticipo, String monedaAnticipo, String categoria, String comentario, String idUsuario, String nombreUsuario, Boolean esRecurrente, String periodoRecurrente, String idInforme, String urlDocumento) {
         this.estado = estado;
         this.fechaGasto = fechaGasto;
         this.id = id;
@@ -58,6 +70,7 @@ public class Gasto {
         this.esRecurrente = esRecurrente;
         this.periodoRecurrente = periodoRecurrente;
         this.idInforme = idInforme;
+        this.urldocumento = urlDocumento;
     }
 
     public String getImagen() {

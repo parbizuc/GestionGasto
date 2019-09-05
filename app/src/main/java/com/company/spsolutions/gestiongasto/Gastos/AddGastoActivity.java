@@ -9,6 +9,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Looper;
@@ -20,7 +22,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,6 +40,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.company.spsolutions.gestiongasto.Modelos.Empresa;
+import com.company.spsolutions.gestiongasto.Modelos.Gasto;
 import com.company.spsolutions.gestiongasto.Modelos.Solicitud;
 import com.company.spsolutions.gestiongasto.Modelos.Usuario;
 import com.company.spsolutions.gestiongasto.R;
@@ -45,6 +50,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -59,6 +66,8 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
      * sendData envia los datos al presentador
      * comboRecurrente maneja toda la lógica en caso de que exista cargos recurrentes
      */
+    Gasto gasto;
+    Boolean isEditar;
     List<Solicitud> solicitudes = new ArrayList<>();
     List<String> categorias = new ArrayList<>();
     LinearLayout frecuenciaLL;
@@ -74,7 +83,7 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
     Boolean esRecurrente = false;
     ProgressDialog wProgress;
     PresenterGastosImpl presenter;
-    TextView monedaTV, categoriaTV, frecuenciaTV, contadorTV, rolTV, empresaTV, usuarioTV, tituloTV;
+    TextView monedaTV, categoriaTV, frecuenciaTV, contadorTV, rolTV, empresaTV, usuarioTV, tituloTV, verdocTV;
     EditText importeET, fechaReciboET, proveedorET, comentarioET;
     final Calendar c = Calendar.getInstance();
     final int mes = c.get(Calendar.MONTH);
@@ -101,6 +110,8 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         getSupportActionBar().hide();
+        isEditar = getIntent().hasExtra("gasto");
+
         presenter = new PresenterGastosImpl(this, this);
         getDatos();
         //Spinner MONEDAS
@@ -133,11 +144,35 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
         rolTV = findViewById(R.id.rolag_tv);
         usuarioTV = findViewById(R.id.usuarioag_tv);
         empresaTV = findViewById(R.id.empresaag_tv);
+        verdocTV = findViewById(R.id.verDoc_tv);
         wProgress = new ProgressDialog(this);
         setToday();
         empresaTV.setText(Empresa.getInstance().getNombre());
         usuarioTV.setText(Usuario.getInstance().getNombre());
         rolTV.setText(Usuario.getInstance().getRol());
+        if (isEditar) {
+            gasto = (Gasto) getIntent().getSerializableExtra("gasto");
+            //se agregan los gatos para mostrarlos
+            proveedorET.setText(gasto.getNombreProveedor());
+            importeET.setText(gasto.getMontoGasto());
+            //categoriaSP.
+            int spinnerPosition = adapter.getPosition(gasto.getMonedaGasto());
+            monedaSP.setSelection(spinnerPosition);
+            comentarioET.setText(gasto.getComentario());
+            //adelantoSP
+            //frecuenciaSP
+            fechaReciboET.setText(gasto.getFechaGasto());
+            if(gasto.getImagen()!=null){
+                new DownLoadImageTask(pictureIV).execute(gasto.getImagen());
+            }else{
+                pictureIV.setVisibility(View.GONE);
+                pictureBTN.setVisibility(View.GONE);
+                verdocTV.setVisibility(View.VISIBLE);
+                verdocTV.setText(Html.fromHtml("<a href=\""+gasto.getUrldocumento()+"\"> ver Docuemento :P</a>"));
+                verdocTV.setClickable(true);
+                verdocTV.setMovementMethod (LinkMovementMethod.getInstance());
+            }
+        }
     }
 
     private void setToday() {
@@ -163,6 +198,12 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
                 adapterASP.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 adelantoSP.setGravity(View.TEXT_ALIGNMENT_CENTER);
                 adelantoSP.setAdapter(adapterASP);
+                if (isEditar) {
+                    //si el gasto no tiene un id atisipo se pondra sin antisipo de lo contrario se busccara el atnticipo
+                    int spinnerPositionA = adapterASP.getPosition(solicitudes.get(0));
+                    adelantoSP.setSelection(spinnerPositionA);
+                }
+
             }
         });
 
@@ -180,6 +221,10 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
                 adapterCSP.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 categoriaSP.setGravity(View.TEXT_ALIGNMENT_CENTER);
                 categoriaSP.setAdapter(adapterCSP);
+                if (isEditar) {
+                    int spinnerPosition = adapterCSP.getPosition(gasto.getCategoria());
+                    categoriaSP.setSelection(spinnerPosition);
+                }
             }
         });
 
@@ -403,4 +448,40 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
             wProgress.dismiss();
         }
     }
+    private class DownLoadImageTask extends AsyncTask<String,Void, Bitmap>{
+        ImageView imageView;
+
+        public DownLoadImageTask(ImageView imageView){
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            String urlOfImage = urls[0];
+            Bitmap logo = null;
+            try{
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+            }
+            return logo;
+        }
+
+        /*
+            onPostExecute(Result result)
+                Runs on the UI thread after doInBackground(Params...).
+         */
+        protected void onPostExecute(Bitmap result){
+            imageView.setImageBitmap(result);
+        }
+    }
 }
+
