@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.widget.Switch;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.rekognition.AmazonRekognition;
@@ -105,7 +104,7 @@ public class PresenterGastosImpl {
         return new File(mediaStorageDir.getPath() + File.separator + "ticket_" + timeStamp + ".jpg");
     }
 
-    public void processImagen(Uri file) throws IOException {
+    public Void processImagen(Uri file) throws IOException {
         //delegate.displayProgress(true, "Analizando Imagen");
         InputStream imageInputStream = context.getContentResolver().openInputStream(file);
         final byte[] imageArray = IOUtils.toByteArray(imageInputStream);
@@ -122,13 +121,14 @@ public class PresenterGastosImpl {
             e.printStackTrace();
             delegate.displayTicketResults("", "");
         }
+        return null;
     }
 
     private void ticketAnalize() {
         ArrayList<String> array_date = new ArrayList<String>();
         ArrayList<String> array_amount = new ArrayList<String>();
         String date_formated = "";
-        String[] text_used = {"total", "importe", "mxn", "m.n"};
+        String[] text_used = {"total", "importe", "mxn", "m.n", "efectivo", "m.n.$","m.n."  };
         String amount = "";
         //System.out.println(texto);
         for (int i = 0; i < texto.size(); i++) {
@@ -147,63 +147,66 @@ public class PresenterGastosImpl {
             Matcher match_amount = pat_amount.matcher(str);
             Boolean amount_found = match_amount.find();
             if (amount_found.equals(true)) {
+                //System.out.println("Resultados posibles para monto"+str);
                 for (String j : text_used) {
                     Boolean text_amount = texto.get(i).toLowerCase().contains(j);
                     if (text_amount.equals(true)) {
                         amount = texto.get(i).substring(match_amount.start(), match_amount.end());
+                        System.out.println("Amount"+amount);
                     }
                 }
                 array_amount.add(texto.get(i).substring(match_amount.start(), match_amount.end()));
             }
         }
         if (array_date.size() > 0) {
-            System.out.println(texto);
+            //System.out.println(texto);
             System.out.println("Array Date: " + array_date);
             String dateWoutFormat = array_date.get(0);
-            System.out.println("fecha a formatear " + dateWoutFormat);
+            //System.out.println("fecha a formatear " + dateWoutFormat);
             String pattern_dmy = "((0[1-9]|[1-2][0-9]|3[0-1])(\\/|-|\\s|\\.|)((0[1-9])|(1[0-2])|(ene(?:ro)?|feb(?:rero)?|mar(?:zo)?|abr(?:il)?|may(?:o)?|jun(?:io)?|jul(?:io)?|ago(?:sto)?|sep(?:tiembre)?|oct(?:ubre)?|nov(?:iembre)?|dic(?:iembre)?)|(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?))(\\/|-|\\s|\\.|)((20[0-9]{2})|(19|2[0-9])))";
             String pattern_ymd = "(((20[0-9]{2})|(19|2[0-9]))(\\/|-|\\s|\\.|)((0[1-9])|(1[0-2])|(ene(?:ro)?|feb(?:rero)?|mar(?:zo)?|abr(?:il)?|may(?:o)?|jun(?:io)?|jul(?:io)?|ago(?:sto)?|sep(?:tiembre)?|oct(?:ubre)?|nov(?:iembre)?|dic(?:iembre)?)|(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?))(\\/|-|\\s|\\.|)(0[1-9]|[1-2][0-9]|3[0-1]))";
             Pattern format_dmy = Pattern.compile(pattern_dmy);
             Pattern format_ymd = Pattern.compile(pattern_ymd);
             if (format_dmy.matcher(dateWoutFormat).find()) {
-                System.out.println("formato de fecha dia mes año");
+                //System.out.println("formato de fecha dia mes año");
                 if (dateWoutFormat.contains("/")) {
-                    System.out.println("separador /");
+                    //System.out.println("separador /");
                     date_formated = searchDateFormat_dma(dateWoutFormat, "/");
                 } else if (dateWoutFormat.contains("-")) {
-                    System.out.println("separador -");
+                    //System.out.println("separador -");
                     date_formated = searchDateFormat_dma(dateWoutFormat, "/");
                 } else if (dateWoutFormat.contains(" ")) {
-                    System.out.println("separador espacio");
+                    //System.out.println("separador espacio");
                     date_formated = searchDateFormat_dma(dateWoutFormat, " ");
                 } else if (dateWoutFormat.contains(".")) {
-                    System.out.println("separador .");
+                    //System.out.println("separador .");
                     date_formated = searchDateFormat_dma(dateWoutFormat, ".");
                 } else if (dateWoutFormat.length() > 6) {
-                    System.out.println("sin separador");
+                    //System.out.println("sin separador");
                     date_formated = searchDateFormat_dma(dateWoutFormat, "");
                 }
             } else if (format_ymd.matcher(dateWoutFormat).find() && !format_dmy.matcher(dateWoutFormat).find()) {
-                System.out.println("formato de fecha año mes dia");
+                //System.out.println("formato de fecha año mes dia");
                 if (dateWoutFormat.contains("/")) {
-                    System.out.println("separador /");
+                    //System.out.println("separador /");
                     date_formated = searchDateFormat_amd(dateWoutFormat, "/");
                 } else if (dateWoutFormat.contains("-")) {
-                    System.out.println("separador -");
+                    //System.out.println("separador -");
                     date_formated = searchDateFormat_amd(dateWoutFormat, "/");
                 } else if (dateWoutFormat.contains(" ")) {
-                    System.out.println("separador espacio");
+                    //System.out.println("separador espacio");
                     date_formated = searchDateFormat_amd(dateWoutFormat, " ");
                 } else if (dateWoutFormat.contains(".")) {
-                    System.out.println("separador .");
+                    //System.out.println("separador .");
                     date_formated = searchDateFormat_amd(dateWoutFormat, ".");
                 } else if (dateWoutFormat.length() > 6) {
-                    System.out.println("sin separador");
+                    //System.out.println("sin separador");
                     date_formated = searchDateFormat_amd(dateWoutFormat, "");
                 }
             }
             if (array_amount.size() > 0) {
                 Double iMayor = 0.0;
+                ArrayList<String> repeated = new ArrayList<String>();
                 for (int h = 0; h < array_amount.size(); h++) {
                     if (Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", "")) > iMayor) {
                         iMayor = Double.parseDouble(array_amount.get(h).trim().replaceAll("[$:]", ""));
@@ -226,7 +229,7 @@ public class PresenterGastosImpl {
                 //System.out.println("no encontro fecha solo monto: "+iMayor);
                 delegate.displayTicketResults(Double.toString(iMayor), "");
             } else {
-                //System.out.println("no encontro nada");
+                System.out.println("no encontro nada");
                 delegate.displayTicketResults("", "");
             }
         }
@@ -235,17 +238,17 @@ public class PresenterGastosImpl {
     private String searchDateFormat_dma(String dateWoutFormat, String separatorChar) {
         String date_formated = "";
         String dd_mm_aaaa = "((0[1-9]|[1-2][0-9]|3[0-1])" + separatorChar + "((0[1-9])|(1[0-2]))" + separatorChar + "(20[0-9]{2}))";
-        System.out.println("dd_mm_aaaa->" + dd_mm_aaaa);
+        //System.out.println("dd_mm_aaaa->" + dd_mm_aaaa);
         String dd_mmm_aaaa = "((0[1-9]|[1-2][0-9]|3[0-1])" + separatorChar + "(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)" + separatorChar + "(20[0-9]{2}))";
-        System.out.println("dd_mmm_aaaa->" + dd_mmm_aaaa);
+        //System.out.println("dd_mmm_aaaa->" + dd_mmm_aaaa);
         String dd_mmmm_aaaa = "((0[1-9]|[1-2][0-9]|3[0-1])" + separatorChar + "(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)" + separatorChar + "(20[0-9]{2}))";
-        System.out.println("dd_mmmm_aaaa->" + dd_mmmm_aaaa);
+        //System.out.println("dd_mmmm_aaaa->" + dd_mmmm_aaaa);
         String dd_mm_aa = "((0[1-9]|[1-2][0-9]|3[0-1])" + separatorChar + "((0[1-9])|(1[0-2]))" + separatorChar + "(19|2[0-9]))";
-        System.out.println("dd_mm_aa->" + dd_mm_aa);
+        //System.out.println("dd_mm_aa->" + dd_mm_aa);
         String dd_mmm_aa = "((0[1-9]|[1-2][0-9]|3[0-1])" + separatorChar + "(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)" + separatorChar + "(19|2[0-9]))";
-        System.out.println("dd_mmm_aa->" + dd_mmm_aa);
+        //System.out.println("dd_mmm_aa->" + dd_mmm_aa);
         String dd_mmmm_aa = "((0[1-9]|[1-2][0-9]|3[0-1])" + separatorChar + "(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)" + separatorChar + "(19|2[0-9]))";
-        System.out.println("dd_mmmm_aa->" + dd_mmmm_aa);
+        //System.out.println("dd_mmmm_aa->" + dd_mmmm_aa);
         Pattern fdd_mm_aaaa = Pattern.compile(dd_mm_aaaa);
         Pattern fdd_mmm_aaaa = Pattern.compile(dd_mmm_aaaa);
         Pattern fdd_mmmm_aaaa = Pattern.compile(dd_mmmm_aaaa);
@@ -255,27 +258,27 @@ public class PresenterGastosImpl {
 
 
         if (fdd_mm_aaaa.matcher(dateWoutFormat).find()) {
-            System.out.println("dd" + separatorChar + "MM" + separatorChar + "yyyy");
+            //System.out.println("dd" + separatorChar + "MM" + separatorChar + "yyyy");
             date_formated = dateFormatter(dateWoutFormat, "dd" + separatorChar + "MM" + separatorChar + "yyyy");
             System.out.println("Fecha dd_mm_aaaa ya formateada: " + date_formated);
         } else if (fdd_mmm_aaaa.matcher(dateWoutFormat).find()) {
-            System.out.println("dd" + separatorChar + "MMM" + separatorChar + "yyyy");
+            //System.out.println("dd" + separatorChar + "MMM" + separatorChar + "yyyy");
             date_formated = dateFormatter(dateWoutFormat, "dd" + separatorChar + "MMM" + separatorChar + "yyyy");
             System.out.println("Fecha dd_mmm_aaaa ya formateada: " + date_formated);
         } else if (fdd_mmmm_aaaa.matcher(dateWoutFormat).find()) {
-            System.out.println("dd" + separatorChar + "MMMM" + separatorChar + "yyyy");
+            //System.out.println("dd" + separatorChar + "MMMM" + separatorChar + "yyyy");
             date_formated = dateFormatter(dateWoutFormat, "dd" + separatorChar + "MMMM" + separatorChar + "yyyy");
             System.out.println("Fecha dd_mmmm_aaaa ya formateada: " + date_formated);
         } else if (fdd_mm_aa.matcher(dateWoutFormat).find()) {
-            System.out.println("dd" + separatorChar + "MM" + separatorChar + "yy");
+            //System.out.println("dd" + separatorChar + "MM" + separatorChar + "yy");
             date_formated = dateFormatter(dateWoutFormat, "dd" + separatorChar + "MM" + separatorChar + "yy");
             System.out.println("Fecha ya formateada: " + date_formated);
         } else if (fdd_mmm_aa.matcher(dateWoutFormat).find()) {
-            System.out.println("dd" + separatorChar + "MMM" + separatorChar + "yy");
+            //System.out.println("dd" + separatorChar + "MMM" + separatorChar + "yy");
             date_formated = dateFormatter(dateWoutFormat, "dd" + separatorChar + "MMM" + separatorChar + "yy");
-            System.out.println("Fecha ya formateada: " + date_formated);
+            //System.out.println("Fecha ya formateada: " + date_formated);
         } else if (fdd_mmmm_aa.matcher(dateWoutFormat).find()) {
-            System.out.println("dd" + separatorChar + "MMMM" + separatorChar + "yy");
+            //System.out.println("dd" + separatorChar + "MMMM" + separatorChar + "yy");
             date_formated = dateFormatter(dateWoutFormat, "dd" + separatorChar + "MMMM" + separatorChar + "yy");
             System.out.println("Fecha ya formateada: " + date_formated);
         }
@@ -298,37 +301,37 @@ public class PresenterGastosImpl {
         Pattern faa_mmmm_dd = Pattern.compile(aa_mmmm_dd);
 
         if (faaaa_mm_dd.matcher(dateWoutFormat).find()) {
-            System.out.println("yyyy" + separatorChar + "MM" + separatorChar + "dd");
+            //System.out.println("yyyy" + separatorChar + "MM" + separatorChar + "dd");
             date_formated = dateFormatter(dateWoutFormat, "yyyy" + separatorChar + "MM" + separatorChar + "dd");
-            System.out.println("Fecha aaaa_mm_dd ya formateada: " + date_formated);
+            //System.out.println("Fecha aaaa_mm_dd ya formateada: " + date_formated);
         } else if (faaaa_mmm_dd.matcher(dateWoutFormat).find()) {
-            System.out.println("yyyy" + separatorChar + "MMM" + separatorChar + "dd");
+            //System.out.println("yyyy" + separatorChar + "MMM" + separatorChar + "dd");
             date_formated = dateFormatter(dateWoutFormat, "yyyy" + separatorChar + "MMM" + separatorChar + "dd");
-            System.out.println("Fecha aaaa_mmm_dd ya formateada: " + date_formated);
+            //System.out.println("Fecha aaaa_mmm_dd ya formateada: " + date_formated);
         } else if (faaaa_mmmm_dd.matcher(dateWoutFormat).find()) {
-            System.out.println("yyyy" + separatorChar + "MMMM" + separatorChar + "dd");
+            //System.out.println("yyyy" + separatorChar + "MMMM" + separatorChar + "dd");
             date_formated = dateFormatter(dateWoutFormat, "yyyy" + separatorChar + "MMMM" + separatorChar + "dd");
-            System.out.println("Fecha aaaa_mmmm_dd ya formateada: " + date_formated);
+            //System.out.println("Fecha aaaa_mmmm_dd ya formateada: " + date_formated);
         } else if (faa_mm_dd.matcher(dateWoutFormat).find()) {
-            System.out.println("yy" + separatorChar + "MM" + separatorChar + "dd");
+            //System.out.println("yy" + separatorChar + "MM" + separatorChar + "dd");
             date_formated = dateFormatter(dateWoutFormat, "yy" + separatorChar + "MM" + separatorChar + "dd");
-            System.out.println("Fecha aa_mm_dd ya formateada: " + date_formated);
+            //System.out.println("Fecha aa_mm_dd ya formateada: " + date_formated);
         } else if (faa_mmm_dd.matcher(dateWoutFormat).find()) {
-            System.out.println("yy" + separatorChar + "MMM" + separatorChar + "dd");
+            //System.out.println("yy" + separatorChar + "MMM" + separatorChar + "dd");
             date_formated = dateFormatter(dateWoutFormat, "yy" + separatorChar + "MMM" + separatorChar + "dd");
-            System.out.println("Fecha aa_mmm_dd ya formateada: " + date_formated);
+            //System.out.println("Fecha aa_mmm_dd ya formateada: " + date_formated);
         } else if (faa_mmmm_dd.matcher(dateWoutFormat).find()) {
-            System.out.println("yy" + separatorChar + "MMMM" + separatorChar + "dd");
+            //System.out.println("yy" + separatorChar + "MMMM" + separatorChar + "dd");
             date_formated = dateFormatter(dateWoutFormat, "yy" + separatorChar + "MMMM" + separatorChar + "dd");
-            System.out.println("Fecha aa_mmmm_dd ya formateada: " + date_formated);
+            //System.out.println("Fecha aa_mmmm_dd ya formateada: " + date_formated);
         }
         return date_formated;
     }
 
     public String dateFormatter(String date, String date_format) {
         try {
-            System.out.println("fecha a formatear: " + date);
-            System.out.println("formato de fecha: " + date_format);
+            //System.out.println("fecha a formatear: " + date);
+            //System.out.println("formato de fecha: " + date_format);
             Date date1 = new SimpleDateFormat(date_format).parse(date);
             System.out.println(date1);
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", new Locale("es_ES"));

@@ -312,22 +312,24 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
+                Glide.with(this).load(file).into(pictureIV);
+                showProgress("Analizando Imagen");
                 processImagen();
             }
         }
     }
 
     private void processImagen() {
-        Glide.with(this).load(file).into(pictureIV);
-        showProgress("Analizando Imagen");
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                Looper.prepare();
+                if (Looper.myLooper()==null)
+                    Looper.prepare();
                 try {
-                    presenter.processImagen(file);
+                    return presenter.processImagen(file);
                 } catch (IOException e) {
                     e.printStackTrace();
+
                 }
                 Looper.loop();
                 return null;
@@ -392,9 +394,11 @@ public class AddGastoActivity extends AppCompatActivity implements PresenterGast
     public void displayTicketResults(String amount, String date) {
         if (!amount.equals("")) {
             importeET.setText(amount);
+            wProgress.dismiss();
         }
         if (!date.equals("")) {
             fechaReciboET.setText(date);
+            wProgress.dismiss();
         }
         wProgress.dismiss();
     }
